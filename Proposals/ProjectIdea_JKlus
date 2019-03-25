@@ -1,0 +1,13 @@
+Using the following Kaggle data set: https://www.kaggle.com/smit1212/diabetic-data-cleaning, which describes patient demographic and relevant diagnostic information for approximately 100,000 patients hospitalized with a diagnosis of diabetes. The goal would be to develop a model that would classify the patients based on their likelihood of being readmitted to the hospital after their initial discharge, or to create some sort of risk score associated with their particular patient demographics.
+
+Potential issues with this idea include:
+- Provenance of the data set is unclear. 
+- Missing data will need to be imputed. 
+
+But, on the upside:
+- We can fit multiple models and determine which performs best for prediction and/or is most appropriate.
+- We may fit both black-box and interpretable models. One might be better for prediction, but the interpretable 
+model could serve as a guide for physicians. 
+
+Cheers,
+Jonathan
