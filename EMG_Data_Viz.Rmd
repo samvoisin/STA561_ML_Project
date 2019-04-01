@@ -1,0 +1,133 @@
+---
+title: "EMG_Data_Viz"
+author: "Sam Voisin"
+date: "4/1/2019"
+output: html_document
+---
+
+## EMG Data Visualization.
+
+The intent of this document is to visualize the 6/7 gestures in the EMG dataset using the sensor readings over time for a sample of the subjects. Data in this document will come from subjects 01, 11, 21, and 31.
+
+```{r libraries, echo = FALSE, message = FALSE, warning = FALSE}
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(here)
+
+```
+
+```{r data, echo=FALSE}
+
+# root file directory for data files
+rootname <- "./EMG_data_for_gestures-master/"
+
+# data file references for subjects 01, 11, 21, 31
+fnames <- c(paste0(rootname, "01/1_raw_data_13-12_22.03.16.txt"),
+            paste0(rootname, "11/1_raw_data_13-11_18.03.16.txt"),
+            paste0(rootname, "21/1_raw_data_20-28_24.04.16.txt"),
+            paste0(rootname, "31/1_raw_data_11-15_11.04.16.txt"))
+
+# read in data tables
+subj01 <- read.table(fnames[1], header = TRUE)
+subj11 <- read.table(fnames[2], header = TRUE)
+subj21 <- read.table(fnames[3], header = TRUE)
+subj31 <- read.table(fnames[4], header = TRUE)
+
+gestclasses <- seq(1, 8)
+
+```
+
+```{r plotfcn, echo = FALSE}
+
+# helper function for plotting gestures
+
+plot_gest <- function(subjdf, gestnum, subjnum) {
+  
+  subjdf %>%
+    filter(class == gestnum) %>%
+    gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+    ggplot(aes(x = time, y = EMG_Measure, color = channel)) + 
+    ggtitle(paste0("Subject ", subjnum, ": Gesture ", gestnum)) +
+    labs(x = "Time (ms)", y = "EMG Reading") +
+    geom_point()
+
+}
+
+```
+
+## Subject 01
+
+```{r subject01, echo = FALSE}
+
+plot_gest(subj01, 1, "01")
+plot_gest(subj01, 2, "01")
+plot_gest(subj01, 3, "01")
+plot_gest(subj01, 4, "01")
+plot_gest(subj01, 5, "01")
+plot_gest(subj01, 6, "01")
+
+```
+
+
+## Subject 11
+
+```{r subject11, echo = FALSE}
+
+plot_gest(subj11, 1, "11")
+plot_gest(subj11, 2, "11")
+plot_gest(subj11, 3, "11")
+plot_gest(subj11, 4, "11")
+plot_gest(subj11, 5, "11")
+plot_gest(subj11, 6, "11")
+
+```
+
+## Subject 21
+
+```{r subject21, echo = FALSE}
+
+plot_gest(subj21, 1, "21")
+plot_gest(subj21, 2, "21")
+plot_gest(subj21, 3, "21")
+plot_gest(subj21, 4, "21")
+plot_gest(subj21, 5, "21")
+plot_gest(subj21, 6, "21")
+
+```
+
+## Subject 31
+
+```{r subject31, echo = FALSE}
+
+plot_gest(subj31, 1, "31")
+plot_gest(subj31, 2, "31")
+plot_gest(subj31, 3, "31")
+plot_gest(subj31, 4, "31")
+plot_gest(subj31, 5, "31")
+plot_gest(subj31, 6, "31")
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
