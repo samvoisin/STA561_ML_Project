@@ -39,6 +39,29 @@ gestclasses <- seq(1, 8)
 
 ```
 
+
+```{r tst}
+
+tst <- subj01 %>% 
+  filter(class == 1)
+
+```
+
+
+```{r}
+
+n <- nrow(tst)
+for (i in 2:n) {
+  
+  if (tst$time[i] - (tst$time[i - 1]) > 1) {
+    print(i)
+  }
+  
+}
+
+```
+
+
 ```{r plotfcn, echo = FALSE}
 
 # helper function for plotting gestures
@@ -62,11 +85,11 @@ plot_gest <- function(subjdf, gestnum, subjnum) {
 ```{r subject01, echo = FALSE}
 
 plot_gest(subj01, 1, "01")
-plot_gest(subj01, 2, "01")
-plot_gest(subj01, 3, "01")
-plot_gest(subj01, 4, "01")
-plot_gest(subj01, 5, "01")
-plot_gest(subj01, 6, "01")
+#plot_gest(subj01, 2, "01")
+#plot_gest(subj01, 3, "01")
+#plot_gest(subj01, 4, "01")
+#plot_gest(subj01, 5, "01")
+#plot_gest(subj01, 6, "01")
 
 ```
 
