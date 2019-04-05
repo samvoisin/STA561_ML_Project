@@ -43,10 +43,18 @@ gestclasses <- seq(1, 8)
 ```{r tst}
 
 tst <- subj01 %>% 
-  filter(class == 1)
+  filter(class == 1) %>%
+  filter(time < 5000) %>% 
+  gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+  filter
+
+tst2 <- subj01 %>% 
+  filter(class == 2) %>%
+  filter(time < 10000) %>% 
+  gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+  filter
 
 ```
-
 
 ```{r}
 
@@ -61,6 +69,15 @@ for (i in 2:n) {
 
 ```
 
+```{r}
+
+ggplot(tst, aes(x = time, y = EMG_Measure, color = channel)) +
+  geom_point()
+
+ggplot(tst2, aes(x = time, y = EMG_Measure, color = channel)) +
+  geom_point()
+
+```
 
 ```{r plotfcn, echo = FALSE}
 
@@ -85,7 +102,7 @@ plot_gest <- function(subjdf, gestnum, subjnum) {
 ```{r subject01, echo = FALSE}
 
 plot_gest(subj01, 1, "01")
-#plot_gest(subj01, 2, "01")
+plot_gest(subj01, 2, "01")
 #plot_gest(subj01, 3, "01")
 #plot_gest(subj01, 4, "01")
 #plot_gest(subj01, 5, "01")
@@ -99,11 +116,11 @@ plot_gest(subj01, 1, "01")
 ```{r subject11, echo = FALSE}
 
 plot_gest(subj11, 1, "11")
-plot_gest(subj11, 2, "11")
-plot_gest(subj11, 3, "11")
-plot_gest(subj11, 4, "11")
-plot_gest(subj11, 5, "11")
-plot_gest(subj11, 6, "11")
+#plot_gest(subj11, 2, "11")
+#plot_gest(subj11, 3, "11")
+#plot_gest(subj11, 4, "11")
+#plot_gest(subj11, 5, "11")
+#plot_gest(subj11, 6, "11")
 
 ```
 
