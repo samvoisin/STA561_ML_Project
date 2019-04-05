@@ -1,13 +1,18 @@
 ---
-title: "EMG_Data_Viz"
+title: "Data_Clusters"
 author: "Sam Voisin"
-date: "4/1/2019"
+date: "4/5/2019"
 output: html_document
 ---
 
-## EMG Data Visualization.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-The intent of this document is to visualize the 6/7 gestures in the EMG dataset using the sensor readings over time for a sample of the subjects. Data in this document will come from subjects 01, 11, 21, and 31.
+
+## EMG Data Gesture Signatures
+
+The intent of this document is to visualize the signatures of the gestures encoded by EMG data. Our hypothesis is that each gesture may tend toward a unique signature that can be identified algorithmically.
 
 ```{r libraries, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -39,6 +44,32 @@ gestclasses <- seq(1, 8)
 
 ```
 
+
+```{r tst}
+
+tst <- subj01 %>% 
+  filter(class == 1) %>%
+  filter(time < 5000) %>% 
+  gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+  filter
+
+tst2 <- subj01 %>% 
+  filter(class == 2) %>%
+  filter(time < 10000) %>% 
+  gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+  filter
+
+```
+
+```{r}
+
+ggplot(tst, aes(x = time, y = EMG_Measure, color = channel)) +
+  geom_point()
+
+ggplot(tst2, aes(x = time, y = EMG_Measure, color = channel)) +
+  geom_point()
+
+```
 
 ```{r plotfcn, echo = FALSE}
 
