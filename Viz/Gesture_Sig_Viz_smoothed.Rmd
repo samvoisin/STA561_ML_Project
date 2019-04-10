@@ -73,7 +73,7 @@ plot_gest_sig <- function(subjdf, gestnum, subjnum, timecut) {
     ggplot(aes(x = time, y = EMG_Measure, color = channel)) + 
     ggtitle(paste0("Subject ", subjnum, ": Gesture ", gestnum)) +
     labs(x = "Time (ms)", y = "EMG Reading") +
-    geom_point()
+    geom_line()
     
   p2 <- subjdf %>% 
     filter(class == gestnum) %>%
@@ -82,7 +82,7 @@ plot_gest_sig <- function(subjdf, gestnum, subjnum, timecut) {
     ggplot(aes(x = time, y = EMG_Measure, color = channel)) + 
     ggtitle(paste0("Subject ", subjnum, ": Gesture ", gestnum)) +
     labs(x = "Time (ms)", y = "EMG Reading") +
-    geom_point()
+    geom_line()
   
   grid.arrange(p1, p2)
   
