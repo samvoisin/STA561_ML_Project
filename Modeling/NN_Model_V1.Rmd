@@ -1,0 +1,54 @@
+---
+title: "NN Model V1"
+author: "Sam Voisin"
+date: "April 9, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(keras)
+library(here)
+
+```
+
+## Computation Graph
+
+
+```{r compgraph}
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
