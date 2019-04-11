@@ -11,6 +11,12 @@ We will fit a perceptron with one layer and a perceptrion with >= 2 hidden layer
 Current Tasks:
 
 Sam - Making computation graph in ipython notebook; working on preliminary 1-layer NN from paper
+
+
 Eduardo - 
+
+
 Subastian - 
+
+
 Yuan - 
