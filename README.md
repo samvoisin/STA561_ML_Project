@@ -11,6 +11,7 @@ We will fit a perceptron with one layer and a perceptrion with >= 2 hidden layer
 Current Tasks:
 
 Sam - Making computation graph in ipython notebook; working on preliminary 1-layer NN from paper
+ - There is a small bug in the parse gesture script causing NA file names. We can move forward with what we have. working on a fix
 
 
 Eduardo - 
