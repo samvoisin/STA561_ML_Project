@@ -2,6 +2,10 @@
 
 library(biosignalEMG)
 suppressMessages(library(tidyverse))
+library(doMC)
+
+registerDoMC(cores = 3)
+
 
 # Helper function to clean sEMG data
 ## Input: txt file_path, out directory path, subfolder to create (e.g. 01, 02, etc)
@@ -57,6 +61,7 @@ if (!dir.exists(file.path(getwd(), out_dir))){
 out_path = file.path(getwd(), out_dir)
 
 data_dirs = list.dirs(full_path)[-1] # Get all subfolders in raw data main folder
+d = length(data_dirs)
 
 # For each subfolder (i.e. 01, 02, 03, etc)
 for (d in data_dirs){

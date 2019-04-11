@@ -1,9 +1,17 @@
 ################################################################################
-#################### Seperate gestures into their own files ####################
+##############     Seperate gestures into their own files    ###################
+################################################################################
+################################################################################
+##############   WARNING: SCRIPT PARALLELIZES OVER 3 CORES   ###################
+############## ENSURE YOUR HAVE THE RESOURCES BEFORE RUNNING ###################
 ################################################################################
 
 library(here)
 library(stringr)
+library(tidyverse)
+library(doMC)
+
+registerDoMC(cores = 3)
 
 ############################### Helper Functions ###############################
 
@@ -11,6 +19,23 @@ write_mat_to_file <- function(m, p) {
   # write matrix to a file at path
   df <- data.frame(m)
   write_csv(df, p)
+}
+
+parse_gest_file <- function(f) {
+  
+  df <- read.table(f, header = TRUE)
+  trl <- str_extract(s, "\\d{1}_clean") # trial number
+  subjnum <- str_extract(f, "\\d{2}/") # id subject number for filepath
+  breakpt <- 0 # reset breakpoint for each file
+  for (i in 2:nrow(df)) {
+    # when gesture class switches cut matrix and write to csv
+    if (df$class[i] != df$class[i - 1]) {
+      classMat <- data.matrix(df[breakpt:(i - 1), ])
+      fp <- paste0(rootname, subjnum, "gesture_", df$class[i], "_", trl, ".csv")
+      write_mat_to_file(classMat, fp)
+      breakpt <- i
+    }
+  }
 }
 
 ################################################################################
@@ -35,28 +60,12 @@ files <- data_frame(
   subjects = list.files(rootname),
   df1 = datafiles1,
   df2 = datafiles2
-)
+) %>% gather(subj, datafiles, -subjects) %>% select(-subj)
 
+n <- length(files$datafiles)
 
 # seperate gestures in each 
-for (f in files$df1) {
-  df <- read.table(f, header = TRUE)
-  subjnum <- str_extract(f, "\\d{2}/") # id subject number for filepath
-  breakpt <- 0 # reset breakpoint for each file
-  for (i in 2:nrow(df)) {
-    # when gesture class switches cut matrix and write to csv
-    if (df$class[i] != df$class[i - 1]) {
-      classMat <- data.matrix(df[breakpt:(i - 1), ])
-      fp <- paste0(rootname, subjnum, "gesture_", df$class[i], "_1", ".csv")
-      # if file already exists use filename "...i_2.csv"
-      if (fp %in% list.files(paste0(rootname, subjnum))) {
-        fp <- paste0(rootname, subjnum, "gesture_", df$class[i], "_2", ".csv")
-      }
-      write_mat_to_file(classMat, fp)
-      breakpt <- i
-    }
-  }
-}
+foreach(i = (1:n)) %dopar% parse_gest_file(files$datafiles[i])
 
 
 
