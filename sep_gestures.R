@@ -24,7 +24,7 @@ write_mat_to_file <- function(m, p) {
 parse_gest_file <- function(f) {
   
   df <- read.table(f, header = TRUE)
-  trl <- str_extract(s, "\\d{1}_clean") # trial number
+  trl <- str_extract(f, "\\d{1}_clean") # trial number
   subjnum <- str_extract(f, "\\d{2}/") # id subject number for filepath
   breakpt <- 0 # reset breakpoint for each file
   for (i in 2:nrow(df)) {
@@ -62,17 +62,10 @@ files <- data_frame(
   df2 = datafiles2
 ) %>% gather(subj, datafiles, -subjects) %>% select(-subj)
 
-n <- length(files$datafiles)
+n <- nrow(files)
 
 # seperate gestures in each 
 foreach(i = (1:n)) %dopar% parse_gest_file(files$datafiles[i])
-
-
-
-
-
-
-
 
 
 
