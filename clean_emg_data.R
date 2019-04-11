@@ -2,9 +2,6 @@
 
 library(biosignalEMG)
 suppressMessages(library(tidyverse))
-library(doMC)
-
-registerDoMC(cores = 3)
 
 
 # Helper function to clean sEMG data
