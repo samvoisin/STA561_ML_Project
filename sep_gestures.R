@@ -11,7 +11,7 @@ library(stringr)
 library(tidyverse)
 library(doMC)
 
-registerDoMC(cores = 3)
+registerDoMC(cores = 4)
 
 ############################### Helper Functions ###############################
 

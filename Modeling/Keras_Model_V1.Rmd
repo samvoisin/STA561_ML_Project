@@ -31,13 +31,20 @@ build_file_name <- function(s, r, n) {
   return(paste0(base_dir, files[finclude]))
 }
 
+split_gest_labs <- function(root) {
+  # split out the labels from each data file
+  subjects
+  
+}
+
 create_gest_refs <- function(root) {
   # get file references for all subjects and all gestures
   subjects <- list.files(root)
   resdf <- tibble(
     subject = subjects,
   ) %>% mutate(gests1 = map(subject, build_file_name, root, 1),
-               gests2 = map(subject, build_file_name, root, 2))
+               gests2 = map(subject, build_file_name, root, 2)) %>% 
+    mutate()
   return(resdf)
 }
 
@@ -54,6 +61,43 @@ fulldataset <- create_gest_refs(rootname)
 
 
 ## Computation Graph
+
+```{r baselineNN}
+
+
+
+
+
+```
+
+
+
+
+
+
+```{r}
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+
+```
+
+
 
 ```{r tst}
 
@@ -90,11 +134,9 @@ summary(model)
 
 model %>% compile(
   loss = 'categorical_crossentropy',
-  optimizer = optimizer_rmsprop(),
+  optimizer = optimizer_adadelta(),
   metrics = c('accuracy')
 )
-
-
 
 ```
 
@@ -127,9 +169,7 @@ model %>% evaluate(x_test, y_test)
 
 ```{r}
 
-
 model %>% predict_classes(x_test)
-
 
 ```
 
