@@ -5,12 +5,52 @@ date: "4/10/2019"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 
+library(here)
 library(keras)
+suppressMessages(library(tidyverse))
 
 ```
+
+
+```{r helperfcns, echo = FALSE}
+
+build_file_name <- function(r, s, n) {
+  # build a file reference
+  # r is root reference
+  # s is subject number
+  # n is file number (1 or 2)
+  base_dir <- paste0(r, s, "/")
+  print(base_dir)
+  files <- list.files(base_dir)
+  print(files)
+  #stringr::str_detect()
+  #fn <- 
+}
+
+create_gest_refs <- function(root) {
+  # get file references for all subjects and all gestures
+  subjects <- list.files(root)
+  resdf <- tibble(
+    subject = subjects,
+    gests1 = map(paste(0))
+  )
+}
+
+```
+
+
+```{r dataprep, echo = FALSE}
+
+rootname <- "../clean_EMG_data_for_gestures-master/"
+
+
+
+```
+
 
 ## Computation Graph
 
@@ -43,3 +83,70 @@ summary(model)
 
 
 ```
+
+
+```{r}
+
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+
+
+
+```
+
+
+
+
+
+```{r}
+
+
+
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 30, batch_size = 1, 
+  validation_split = 0.2
+  )
+
+
+plot(history)
+
+```
+
+
+```{r}
+
+model %>% evaluate(x_test, y_test)
+
+```
+
+
+```{r}
+
+
+model %>% predict_classes(x_test)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
