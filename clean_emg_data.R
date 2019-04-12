@@ -1,7 +1,15 @@
+################################################################################
+##############  WARNING: SCRIPT PARALLELIZED OVER MANY CORES ###################
+############## ENSURE YOUR HAVE THE RESOURCES BEFORE RUNNING ###################
+################################################################################
+
 # Clean EMG data using RMS filter
 
 library(biosignalEMG)
 suppressMessages(library(tidyverse))
+library(doMC)
+
+registerDoMC(cores = 2)
 
 
 # Helper function to clean sEMG data
@@ -45,6 +53,16 @@ clean_semg = function(fil, dat_out, sub_f){
 }
 # End of helper function
 
+# helper for parallel
+operate_on_subfolders <- function(direct) {
+  # direct is directory where operation occurs
+  files = list.files(direct, full.names = TRUE) # Get 2 files
+  sub_f = basename(direct) #Get subfolder name to use in helper fcn and keep folder struct
+  sapply(files, function(x) clean_semg(x, out_path, sub_f)) # Apply helper fcn to both files
+}
+# End of helper function
+
+################################################################################
 
 # Main script
 data_path = "EMG_data_for_gestures-master" # raw data folder
@@ -58,12 +76,8 @@ if (!dir.exists(file.path(getwd(), out_dir))){
 out_path = file.path(getwd(), out_dir)
 
 data_dirs = list.dirs(full_path)[-1] # Get all subfolders in raw data main folder
-d = length(data_dirs)
+dirlen = length(data_dirs)
 
 # For each subfolder (i.e. 01, 02, 03, etc)
-for (d in data_dirs){
-  files = list.files(d, full.names = TRUE) # Get 2 files
-  sub_f = basename(d) #Get subfolder name to use in helper fcn and keep folder struct
-  sapply(files, function(x) clean_semg(x, out_path, sub_f)) # Apply helper fcn to both files
-}
+foreach(d = (1:dirlen)) %dopar% operate_on_subfolders(data_dirs[d])
 

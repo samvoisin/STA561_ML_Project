@@ -31,9 +31,21 @@ build_file_name <- function(s, r, n) {
   return(paste0(base_dir, files[finclude]))
 }
 
-split_gest_labs <- function(root) {
+create_label_vec <- function(g) {
+  # create a vector of zeros and a single 1 as a data label for gestures
+  # 6 possible gestures means vectors will be length 6
+  # g is the number of the gesture
+  v <- rep(0, 6)
+  v[g] <- 1
+  return(v)
+}
+
+split_gest_labs <- function(gfs) {
   # split out the labels from each data file
-  subjects
+  # gfs is the list of gesture filenames (i.e. gests1 or gests2)
+  for (g in gfs) {
+    
+  }
   
 }
 
@@ -43,10 +55,11 @@ create_gest_refs <- function(root) {
   resdf <- tibble(
     subject = subjects,
   ) %>% mutate(gests1 = map(subject, build_file_name, root, 1),
-               gests2 = map(subject, build_file_name, root, 2)) %>% 
-    mutate()
+               gests2 = map(subject, build_file_name, root, 2))
   return(resdf)
 }
+
+
 
 ```
 
@@ -56,7 +69,7 @@ create_gest_refs <- function(root) {
 rootname <- "../clean_EMG_data_for_gestures-master/"
 
 fulldataset <- create_gest_refs(rootname)
-
+fulldataset$gests1[3]
 ```
 
 
