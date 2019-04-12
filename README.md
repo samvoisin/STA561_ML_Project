@@ -1,23 +1,23 @@
 # STA561 Probabilistic Machine Learning: Final Project - Spring 2019
 
 
-Paper:
+### Poster To-Do List - DUE 4/15 6PM
 
-Data:
+1. Intro Description (**Eduardo/Sebastian**)
+    - Motivation
+    - Data Description (w/ tables)
+    - What are we trying to show
 
-We will fit a perceptron with one layer and a perceptrion with >= 2 hidden layers. Our goal is to compare our model to the model described in the paper. We believe that a deeper network will have improved accuracy at only a marginally slower computational cost for an individual classification.
+2. Methods
+    - Description (i.e. 1-layer NN, packages used, etc) **SAM**
+    - NN Diagram **Eduardo**
 
+3. Results **Sebastian/Yuan**
+    - Before/After Smoothing Images
+    - PCA
 
-Current Tasks:
+4. Further Dev **TBD**
 
-Sam - Making computation graph in ipython notebook; working on preliminary 1-layer NN from paper
- - There is a small bug in the parse gesture script causing NA file names. We can move forward with what we have. working on a fix
+5. References **Sebastian**
 
-
-Eduardo - 
-
-
-Subastian - 
-
-
-Yuan - 
+6. Poster Design **Sebastian**
