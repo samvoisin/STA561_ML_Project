@@ -18,17 +18,17 @@ suppressMessages(library(tidyverse))
 
 ```{r helperfcns, echo = FALSE}
 
-build_file_name <- function(r, s, n) {
+build_file_name <- function(s, r, n) {
   # build a file reference
   # r is root reference
   # s is subject number
   # n is file number (1 or 2)
+  fmotif <- paste0(n, "_clean.csv")
   base_dir <- paste0(r, s, "/")
-  print(base_dir)
   files <- list.files(base_dir)
-  print(files)
-  #stringr::str_detect()
-  #fn <- 
+  # get files that include motif (i.e. n_clean.csv)
+  finclude <- stringr::str_detect(files, fmotif)
+  return(paste0(base_dir, files[finclude]))
 }
 
 create_gest_refs <- function(root) {
@@ -36,8 +36,9 @@ create_gest_refs <- function(root) {
   subjects <- list.files(root)
   resdf <- tibble(
     subject = subjects,
-    gests1 = map(paste(0))
-  )
+  ) %>% mutate(gests1 = map(subject, build_file_name, root, 1),
+               gests2 = map(subject, build_file_name, root, 2))
+  return(resdf)
 }
 
 ```
@@ -47,7 +48,7 @@ create_gest_refs <- function(root) {
 
 rootname <- "../clean_EMG_data_for_gestures-master/"
 
-
+fulldataset <- create_gest_refs(rootname)
 
 ```
 
