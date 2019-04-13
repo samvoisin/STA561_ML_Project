@@ -11,7 +11,6 @@ library(doMC)
 
 registerDoMC(cores = 6)
 
-
 # Helper function to clean sEMG data
 ## Input: txt file_path, out directory path, subfolder to create (e.g. 01, 02, etc)
 clean_semg = function(fil, dat_out, sub_f){

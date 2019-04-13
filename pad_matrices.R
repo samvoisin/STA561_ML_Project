@@ -11,7 +11,7 @@ library(doMC)
 registerDoMC(cores = 2)
 
 ############################### Helper Functions ##############################
-
+print(getwd())
 get_max_subj_dims <- function(subj) {
   # return size in rows of the largest data observation file in subj dir
   sizes <- c()
