@@ -21,3 +21,20 @@
 5. References **Sebastian**
 
 6. Poster Design **Sebastian**
+
+
+
+### Script Run Order
+
+1. `clean_emg_data.R`
+
+2. `sep_gestures.R`
+
+3. `PCA.R`
+
+
+
+
+
+
+
