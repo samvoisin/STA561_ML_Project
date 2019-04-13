@@ -33,7 +33,10 @@
 3. `PCA.R`
 
 
+### Observation File Naming Convention
 
+/[main data directory]/[subject number [01,36]]/gesture_[gesture number [1,6]]_[attempt number {1,2}]_[trial number {1,2}]
+there are 2 trials (large txt file) per subject; 2 attempts per gesture per trial
 
 
 
