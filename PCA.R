@@ -14,6 +14,9 @@ ind <- list.files()
 M <- matrix(NA, nrow=1, ncol=9)
 m <- c()
 colnames(M) <- c("time", paste0("channel",1:8))
+
+print("\nReading Files...")
+prog <- progress_estimated(n = length(ind))
 for (i in ind){
   paste0(path, "/", i) %>% setwd()
   files_i <- list.files() %>% grepl("gesture", .) %>% list.files()[.]
@@ -23,6 +26,7 @@ for (i in ind){
     mnew <- rep(j,nrow(Mnew))
     m <- c(m,mnew)
   }
+  prog$tick()$print()
 }
 # exclude dummy row
 M <- M[-1,]
@@ -56,13 +60,18 @@ savinginto <- function(x){
   write.table(MList[[x]],x)
 }
 
+# dplyr tick for progress bar
+prog <- progress_estimated(n = length(ind))
+
 # loop over saving files
+print("\nWriting Files...")
 for (f in ind){
   folder_path <- file.path(main_directory, out_dir, f)
   dir.create(folder_path)
   setwd(folder_path)
   unique(m) %>% grepl(f,.) %>% unique(m)[.] -> files
   lapply(files, savinginto)
+  prog$tick()$print()
 }
 
 
