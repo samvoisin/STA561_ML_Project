@@ -15,13 +15,6 @@ registerDoMC(cores = 2)
 
 ############################### Helper Functions ###############################
 
-#write_mat_to_file <- function(m, p) {
-#  # write matrix to a file at path
-#  df <- data.frame(m)
-#  write_csv(df, p)
-#}
-
-
 parse_gest_file <- function(f) {
   
   df <- read.table(f, header = TRUE) # read txt file

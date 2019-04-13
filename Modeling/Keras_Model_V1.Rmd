@@ -31,15 +31,6 @@ build_file_name <- function(s, r, n) {
   return(paste0(base_dir, files[finclude]))
 }
 
-create_label_vec <- function(g) {
-  # create a vector of zeros and a single 1 as a data label for gestures
-  # 6 possible gestures means vectors will be length 6
-  # g is the number of the gesture
-  v <- rep(0, 6)
-  v[g] <- 1
-  return(v)
-}
-
 split_gest_labs <- function(gfs) {
   # split out the labels from each data file
   # gfs is the list of gesture filenames (i.e. gests1 or gests2)
@@ -59,8 +50,6 @@ create_gest_refs <- function(root) {
   return(resdf)
 }
 
-
-
 ```
 
 
@@ -70,6 +59,7 @@ rootname <- "../clean_EMG_data_for_gestures-master/"
 
 fulldataset <- create_gest_refs(rootname)
 fulldataset$gests1[3]
+
 ```
 
 
@@ -77,21 +67,27 @@ fulldataset$gests1[3]
 
 ```{r baselineNN}
 
+### NEED TO USE `to_categorical` to get one hot y vectors
 
+SingleLayerNN <- keras_model_sequential()
+SingleLayerNN %>%
+  layer_dense(units = 8, input_shape = c()) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 6, activation = "softmax") # output layer
 
-
+summary(SingleLayerNN)
 
 ```
-
-
-
 
 
 
 ```{r}
 
 
-
+SingleLayerNN %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_adadelta(),
+  metrics = c('accuracy')
+)
 
 
 
