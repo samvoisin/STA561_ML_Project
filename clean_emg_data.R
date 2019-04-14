@@ -9,7 +9,7 @@ library(biosignalEMG)
 suppressMessages(library(tidyverse))
 library(doMC)
 
-registerDoMC(cores = 15)
+registerDoMC(cores = 3)
 
 # Helper function to clean sEMG data
 ## Input: txt file_path, out directory path, subfolder to create (e.g. 01, 02, etc)

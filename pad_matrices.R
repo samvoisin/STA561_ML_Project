@@ -9,7 +9,7 @@
 
 library(doMC)
 
-registerDoMC(cores = 6)
+registerDoMC(cores = 3)
 
 setwd("/home/grad/psv6/STA561_ML_Project/")
 
