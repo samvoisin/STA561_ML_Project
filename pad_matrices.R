@@ -21,7 +21,7 @@ get_max_subj_dims <- function(subj) {
   gestfiles <- list.files(subj)
   for (f in gestfiles) {
     fname <- paste0(subj, f)
-    tempdf <- read.table(fname, header = TRUE)
+    tempdf <- read.table(fname, header = TRUE, row.names = NULL)
     sizes <- c(sizes, nrow(tempdf))
   }
   return(max(sizes))
@@ -41,7 +41,7 @@ get_max_global_dims <- function(mastdir) {
 pad_subj_matrix <- function(f, s) {
   # append k rows of zeros so that nrow(mat) = s
   # this function overwrites file f
-  mat <- data.matrix(read.table(f))
+  mat <- data.matrix(read.table(f, row.names = NULL))
   c <- ncol(mat)
   k <- s - nrow(mat)
   zeros <- matrix(0, k, c)

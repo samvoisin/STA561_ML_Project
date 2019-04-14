@@ -6,7 +6,7 @@
 ############## ENSURE YOUR HAVE THE RESOURCES BEFORE RUNNING ###################
 ################################################################################
 
-library(here)
+
 library(stringr)
 library(tidyverse)
 library(doMC)
