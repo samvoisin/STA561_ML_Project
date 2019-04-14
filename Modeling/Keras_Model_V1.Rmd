@@ -9,7 +9,7 @@ output: pdf_document
 
 knitr::opts_chunk$set(echo = TRUE)
 
-library(here)
+
 library(keras)
 suppressMessages(library(tidyverse))
 
@@ -31,14 +31,6 @@ build_file_name <- function(s, r, n) {
   return(paste0(base_dir, files[finclude]))
 }
 
-split_gest_labs <- function(gfs) {
-  # split out the labels from each data file
-  # gfs is the list of gesture filenames (i.e. gests1 or gests2)
-  for (g in gfs) {
-    
-  }
-  
-}
 
 create_gest_refs <- function(root) {
   # get file references for all subjects and all gestures
@@ -49,6 +41,8 @@ create_gest_refs <- function(root) {
                gests2 = map(subject, build_file_name, root, 2))
   return(resdf)
 }
+
+
 
 ```
 
