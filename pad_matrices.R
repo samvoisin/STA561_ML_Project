@@ -11,8 +11,6 @@ library(doMC)
 
 registerDoMC(cores = 3)
 
-setwd("/home/grad/psv6/STA561_ML_Project/")
-
 ############################### Helper Functions ##############################
 
 get_max_subj_dims <- function(subj) {

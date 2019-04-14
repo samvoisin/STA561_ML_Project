@@ -18,50 +18,65 @@ suppressMessages(library(tidyverse))
 
 ```{r helperfcns, echo = FALSE}
 
-build_file_name <- function(s, r, n) {
-  # build a file reference
-  # r is root reference
-  # s is subject number
-  # n is file number (1 or 2)
-  fmotif <- paste0(n, "_clean.csv")
-  base_dir <- paste0(r, s, "/")
-  files <- list.files(base_dir)
-  # get files that include motif (i.e. n_clean.csv)
-  finclude <- stringr::str_detect(files, fmotif)
-  return(paste0(base_dir, files[finclude]))
+append_file_names <- function(root) {
+  # append names of all files in a dir to root address
+  files <- list.files(root)
+  res <- paste0(root, files)
+  return(res)
 }
 
-
-create_gest_refs <- function(root) {
-  # get file references for all subjects and all gestures
-  subjects <- list.files(root)
-  resdf <- tibble(
-    subject = subjects,
-  ) %>% mutate(gests1 = map(subject, build_file_name, root, 1),
-               gests2 = map(subject, build_file_name, root, 2))
-  return(resdf)
+id_gest_num <- function(fn) {
+  # identify the gesture number from the filename
+  motif1 <- "gesture_\\d{1}"
+  motif2 <- "\\d{1}"
+  gsttxt <- stringr::str_extract(fn, motif1)
+  gstnum <- as.integer(stringr::str_extract(gsttxt, motif2))
+  return(gstnum)
 }
-
-
 
 ```
 
 
 ```{r dataprep, echo = FALSE}
 
-rootname <- "../clean_EMG_data_for_gestures-master/"
+datafiles <- c()
+gestures <- 6
 
-fulldataset <- create_gest_refs(rootname)
-fulldataset$gests1[3]
+root <- "../PCA_EMG_data_for_gestures/"
+subjects <- paste0(root, list.files(root), "/")
+datarefs <- purrr::flatten_chr(map(subjects, append_file_names))
+
+ordered_gest_nums <- id_gest_num(datarefs)
+
+# set up tensor dimensions
+numobs <- length(ordered_gest_nums)
+y_dims <- c(numobs, gestures)
+x_dims <- c(numobs, 4280, 8) # every matrix is padded to 4280; 8 channels
+
+# create categorical matrix of one-hot gesture labels
+y_mat <- to_categorical(ordered_gest_nums)
+
+# x data tensor
+x_mat <- array(0, x_dims)
+
+# dplyr tick for progress bar
+prog <- progress_estimated(n = numobs)
+
+for (i in 1:numobs) {
+  # 2:9 to remove row names col; we should fix this
+  single_gest_mat <- data.matrix(read.table(datarefs[i])[, 2:9]) 
+  x_mat[i, , ] <- single_gest_mat
+  prog$tick()$print()
+}
+
 
 ```
-
 
 ## Computation Graph
 
 ```{r baselineNN}
 
-### NEED TO USE `to_categorical` to get one hot y vectors
+
 
 SingleLayerNN <- keras_model_sequential()
 SingleLayerNN %>%
@@ -111,6 +126,17 @@ x_test <- mnist$test$x
 y_test <- to_categorical(mnist$test$y)
 
 
+
+y_train <- mnist$train$y
+dim(y_train)
+dim(x_train)
+
+
+```
+
+
+```{r}
+
 # reshape
 x_train <- array_reshape(x_train, c(nrow(x_train), 784))
 x_test <- array_reshape(x_test, c(nrow(x_test), 784))
@@ -119,6 +145,13 @@ x_train <- x_train / 255
 x_test <- x_test / 255
 
 
+
+
+```
+
+
+
+```{r}
 model <- keras_model_sequential() 
 model %>% 
   layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
