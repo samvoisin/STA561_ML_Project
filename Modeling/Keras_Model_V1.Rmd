@@ -41,6 +41,7 @@ id_gest_num <- function(fn) {
 
 datafiles <- c()
 gestures <- 6
+channels <- 8
 
 root <- "../PCA_EMG_data_for_gestures/"
 subjects <- paste0(root, list.files(root), "/")
@@ -51,10 +52,11 @@ ordered_gest_nums <- id_gest_num(datarefs)
 # set up tensor dimensions
 numobs <- length(ordered_gest_nums)
 y_dims <- c(numobs, gestures)
-x_dims <- c(numobs, 4280, 8) # every matrix is padded to 4280; 8 channels
+x_dims <- c(numobs, 4280, channels) # every matrix is padded to 4280; 8 channels
 
 # create categorical matrix of one-hot gesture labels
-y_mat <- to_categorical(ordered_gest_nums)
+# this is giving me an extra col of zeros? thats why -1 is here
+y_mat <- to_categorical(ordered_gest_nums)[, -1]
 
 # x data tensor
 x_mat <- array(0, x_dims)
@@ -69,6 +71,11 @@ for (i in 1:numobs) {
   prog$tick()$print()
 }
 
+# flatten x_mat tensor into numobs by (gestures x channels)
+x_mat <- array_reshape(x_mat, c(numobs, x_dims[2] * x_dims[3]))
+
+# reset x_dims after reshape
+x_dims <- dim(x_mat)
 
 ```
 
@@ -76,11 +83,9 @@ for (i in 1:numobs) {
 
 ```{r baselineNN}
 
-
-
 SingleLayerNN <- keras_model_sequential()
 SingleLayerNN %>%
-  layer_dense(units = 8, input_shape = c()) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 8, input_shape = x_dims[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
   layer_dense(units = 6, activation = "softmax") # output layer
 
 summary(SingleLayerNN)
@@ -89,103 +94,25 @@ summary(SingleLayerNN)
 
 
 
-```{r}
+```{r loss}
 
-
+# crossentropy loss with adadelta optimizer for speed of training
 SingleLayerNN %>% compile(
   loss = 'categorical_crossentropy',
   optimizer = optimizer_adadelta(),
   metrics = c('accuracy')
 )
 
-
-
-
-
-
 ```
 
 
 
 
-```{r}
+```{r train}
 
 
-
-
-```
-
-
-
-```{r tst}
-
-mnist <- dataset_mnist()
-x_train <- mnist$train$x
-y_train <- to_categorical(mnist$train$y)
-x_test <- mnist$test$x
-y_test <- to_categorical(mnist$test$y)
-
-
-
-y_train <- mnist$train$y
-dim(y_train)
-dim(x_train)
-
-
-```
-
-
-```{r}
-
-# reshape
-x_train <- array_reshape(x_train, c(nrow(x_train), 784))
-x_test <- array_reshape(x_test, c(nrow(x_test), 784))
-# rescale
-x_train <- x_train / 255
-x_test <- x_test / 255
-
-
-
-
-```
-
-
-
-```{r}
-model <- keras_model_sequential() 
-model %>% 
-  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
-  layer_dropout(rate = 0.4) %>% 
-  layer_dense(units = 128, activation = 'relu') %>%
-  layer_dropout(rate = 0.3) %>%
-  layer_dense(units = 10, activation = 'softmax')
-
-summary(model)
-
-
-```
-
-
-```{r}
-
-model %>% compile(
-  loss = 'categorical_crossentropy',
-  optimizer = optimizer_adadelta(),
-  metrics = c('accuracy')
-)
-
-```
-
-
-
-
-
-```{r}
-
-
-
-history <- model %>% fit(
-  x_train, y_train, 
+history <- SingleLayerNN %>% fit(
+  x_mat, y_mat, 
   epochs = 30, batch_size = 1, 
   validation_split = 0.2
   )
@@ -193,37 +120,5 @@ history <- model %>% fit(
 
 plot(history)
 
-```
-
-
-```{r}
-
-model %>% evaluate(x_test, y_test)
 
 ```
-
-
-```{r}
-
-model %>% predict_classes(x_test)
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
