@@ -37,7 +37,7 @@ id_gest_num <- function(fn) {
 ```
 
 
-```{r dataprep, echo = FALSE}
+```{r dataprepPCA, echo = FALSE}
 
 datafiles <- c()
 gestures <- 6
@@ -71,18 +71,55 @@ for (i in 1:numobs) {
   prog$tick()$print()
 }
 
-# flatten x_mat tensor into numobs by (gestures x channels)
-x_mat <- array_reshape(x_mat, c(numobs, x_dims[2] * x_dims[3]))
-
-# reset x_dims after reshape
-x_dims <- dim(x_mat)
 
 ```
 
-## Computation Graph
+
+```{r dataprepChan, echo = FALSE}
+
+datafiles <- c()
+gestures <- 6
+channels <- 8
+
+root <- "../PCA_EMG_data_for_gestures/"
+subjects <- paste0(root, list.files(root), "/")
+datarefs <- purrr::flatten_chr(map(subjects, append_file_names))
+
+ordered_gest_nums <- id_gest_num(datarefs)
+
+# set up tensor dimensions
+numobs <- length(ordered_gest_nums)
+y_dims <- c(numobs, gestures)
+x_dims <- c(numobs, 4280, channels) # every matrix is padded to 4280; 8 channels
+
+# create categorical matrix of one-hot gesture labels
+# this is giving me an extra col of zeros? thats why -1 is here
+y_mat <- to_categorical(ordered_gest_nums)[, -1]
+
+# x data tensor
+x_mat <- array(0, x_dims)
+
+# dplyr tick for progress bar
+prog <- progress_estimated(n = numobs)
+
+for (i in 1:numobs) {
+  # 2:9 to remove row names col; we should fix this
+  single_gest_mat <- data.matrix(read.table(datarefs[i])[, 2:9]) 
+  x_mat[i, , ] <- single_gest_mat
+  prog$tick()$print()
+}
+
+
+```
+
+
+
+
+## Computation Graph for Single Layer ANN
 
 ```{r baselineNN}
 
+# design for single layer network
 SingleLayerNN <- keras_model_sequential()
 SingleLayerNN %>%
   layer_dense(units = 8, input_shape = x_dims[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
@@ -92,12 +129,30 @@ summary(SingleLayerNN)
 
 ```
 
+#### Using All 8 Principle Components
 
 
-```{r loss}
+```{r 8PCloss}
+
+# remove non-principle components
+pc <- 8
+x_matpc8 <- x_mat[ , , 1:pc]
+x_dimspc8 <- dim(x_matpc8)
+
+# flatten x_mat tensor into numobs by (gestures x channels)
+x_matpc8 <- array_reshape(x_matpc8, c(numobs, x_dimspc8[2] * x_dimspc8[3]))
+
+# reset x_dims after reshape
+x_dimspc8 <- dim(x_matpc8)
+
+
+SingleLayerNNpc8 <- keras_model_sequential()
+SingleLayerNNpc8 %>%
+  layer_dense(units = pc, input_shape = x_dimspc8[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 6, activation = "softmax") # output layer
 
 # crossentropy loss with adadelta optimizer for speed of training
-SingleLayerNN %>% compile(
+SingleLayerNNpc8 %>% compile(
   loss = 'categorical_crossentropy',
   optimizer = optimizer_adadelta(),
   metrics = c('accuracy')
@@ -107,18 +162,184 @@ SingleLayerNN %>% compile(
 
 
 
+```{r 8PCtrain}
 
-```{r train}
-
-
-history <- SingleLayerNN %>% fit(
-  x_mat, y_mat, 
+history <- SingleLayerNNpc8 %>% fit(
+  x_matpc8, y_mat, 
   epochs = 30, batch_size = 1, 
   validation_split = 0.2
   )
 
+plot(history) +
+  ggtitle(paste0("Cross Entropy with ", pc, " Principle Components"))
 
-plot(history)
+```
+
+
+
+#### Using Top 4 Principle Components
+
+```{r 4PCloss}
+
+# remove non-principle components
+pc <- 4
+x_matpc4 <- x_mat[ , , 1:pc]
+x_dimspc4 <- dim(x_matpc4)
+
+# flatten x_mat tensor into numobs by (gestures x channels)
+x_matpc4 <- array_reshape(x_matpc4, c(numobs, x_dimspc4[2] * x_dimspc4[3]))
+
+# reset x_dims after reshape
+x_dimspc4 <- dim(x_matpc4)
+
+
+SingleLayerNNpc4 <- keras_model_sequential()
+SingleLayerNNpc4 %>%
+  layer_dense(units = pc, input_shape = x_dimspc4[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 6, activation = "softmax") # output layer
+
+# crossentropy loss with adadelta optimizer for speed of training
+SingleLayerNNpc4 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_adadelta(),
+  metrics = c('accuracy')
+)
+
+```
+
+
+
+```{r 4PCtrain}
+
+history <- SingleLayerNNpc4 %>% fit(
+  x_matpc4, y_mat, 
+  epochs = 15, batch_size = 1, 
+  validation_split = 0.2
+  )
+
+plot(history) +
+  ggtitle(paste0("Cross Entropy with ", pc, " Principle Components"))
+
+
+
 
 
 ```
+
+
+
+## Computation Graph for Two Layer ANN
+
+```{r 2layerNN}
+
+# design for single layer network
+TwoLayerNN <- keras_model_sequential()
+TwoLayerNN %>%
+  layer_dense(units = 8, input_shape = x_dims[-1]) %>% 
+  layer_dense(units = 8) %>% 
+  layer_dense(units = 6, activation = "softmax") # output layer
+
+summary(TwoLayerNN)
+
+```
+#### Using All 8 Principle Components
+
+
+```{r 8PCloss}
+
+# remove non-principle components
+pc <- 8
+x_matpc8 <- x_mat[ , , 1:pc]
+x_dimspc8 <- dim(x_matpc8)
+
+# flatten x_mat tensor into numobs by (gestures x channels)
+x_matpc8 <- array_reshape(x_matpc8, c(numobs, x_dimspc8[2] * x_dimspc8[3]))
+
+# reset x_dims after reshape
+x_dimspc8 <- dim(x_matpc8)
+
+
+TwoLayerNNpc8 <- keras_model_sequential()
+TwoLayerNNpc8 %>%
+  layer_dense(units = pc, input_shape = x_dimspc8[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 6, activation = "softmax") # output layer
+
+# crossentropy loss with adadelta optimizer for speed of training
+TwoLayerNNpc8 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_adadelta(),
+  metrics = c('accuracy')
+)
+
+```
+
+
+
+```{r 8PCtrain}
+
+history <- TwoLayerNNpc8 %>% fit(
+  x_matpc8, y_mat, 
+  epochs = 30, batch_size = 1, 
+  validation_split = 0.2
+  )
+
+plot(history) +
+  ggtitle(paste0("Cross Entropy with ", pc, " Principle Components"))
+
+```
+
+
+
+#### Using Top 4 Principle Components
+
+```{r 4PCloss}
+
+# remove non-principle components
+pc <- 4
+x_matpc4 <- x_mat[ , , 1:pc]
+x_dimspc4 <- dim(x_matpc4)
+
+# flatten x_mat tensor into numobs by (gestures x channels)
+x_matpc4 <- array_reshape(x_matpc4, c(numobs, x_dimspc4[2] * x_dimspc4[3]))
+
+# reset x_dims after reshape
+x_dimspc4 <- dim(x_matpc4)
+
+
+TwoLayerNNpc4 <- keras_model_sequential()
+TwoLayerNNpc4 %>%
+  layer_dense(units = pc, input_shape = x_dimspc4[-1]) %>% # input layerl; specify units and input shape; no activation defaults to linear for now
+  layer_dense(units = 6, activation = "softmax") # output layer
+
+# crossentropy loss with adadelta optimizer for speed of training
+TwoLayerNNpc4 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_adadelta(),
+  metrics = c('accuracy')
+)
+
+```
+
+
+
+```{r 4PCtrain}
+
+history <- TwoLayerNNpc4 %>% fit(
+  x_matpc4, y_mat, 
+  epochs = 20, batch_size = 1, 
+  validation_split = 0.2
+  )
+
+plot(history) +
+  ggtitle(paste0("Cross Entropy with ", pc, " Principle Components"))
+
+
+```
+
+## Out-of-Sample Subject Cross Validation
+
+
+
+
+
+
