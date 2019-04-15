@@ -1,0 +1,6 @@
+We begin by preprocessing our data to remove the noise inherent to the sEMG data.
+This is done by performing RMS smoothing. Once the signal smoothing is complete, we perform a PCA mapping to reduce the dimensionality of our data.
+Through the PCA, we found that the first 4 principle components account for more than 80% of the variance in the EMG data for each gesture. The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of the same dimension.
+We then developed two Artificial Neural Networks (ANN). The first of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function.
+This model was inspired by the research paper discussed above. We believe that we can improve on this model with additional hidden layers to better approximate the function by which someone performing gestures will generate EMG data.
+To do this, we start by adding an additional hidden layer also having eight hidden units and linear activation. The output layer and soft-max activation remain the same as the first ANN.
