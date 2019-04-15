@@ -39,6 +39,17 @@ parse_gest_file <- function(f) {
   }
 }
 
+
+remove_main_data_files <- function(subjdir) {
+  # delete non-parsed data files after parsing gestures
+  files <- list.files(subjdir)
+  full_dat_files <- files[str_detect(files, "\\d_clean_data_")]
+  full_file_paths <- paste0(subjdir, "/", full_dat_files)
+  if (file.exists(full_file_paths)) {
+    file.remove(full_file_paths)
+  }
+}
+
 ################################################################################
 
 
@@ -67,6 +78,23 @@ n <- nrow(files)
 
 # seperate gestures in each 
 foreach(i = (1:n)) %dopar% parse_gest_file(files$datafiles[i])
+
+
+for (s in subjects) {
+  remove_main_data_files(s)
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
