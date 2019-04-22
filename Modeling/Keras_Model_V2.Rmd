@@ -39,10 +39,47 @@ id_gest_num <- function(fn) {
   return(gstnum)
 }
 
+# Data prep for ANN
+dataprep <- function(roo_dir, n_gests, n_chan){
+  datafiles <- c()
+  gestures <- n_gests
+  channels <- n_chan
+  
+  subjects <- paste0(root, list.files(root), "/")
+  datarefs <- purrr::flatten_chr(map(subjects, append_file_names))
+  
+  ordered_gest_nums <- id_gest_num(datarefs)
+
+  # set up tensor dimensions
+  numobs <- length(ordered_gest_nums)
+  y_dims <- c(numobs, gestures)
+  x_dims <- c(numobs, 4280, channels) # every matrix is padded to 4280; 8 channels
+  
+  # create categorical matrix of one-hot gesture labels
+  # this is giving me an extra col of zeros? thats why -1 is here
+  y_mat <- to_categorical(ordered_gest_nums)[, -1]
+  
+  # x data tensor
+  x_mat <- array(0, x_dims)
+  
+  # dplyr tick for progress bar
+  prog <- progress_estimated(n = numobs)
+  
+  for (i in 1:numobs) {
+    # 2:9 to remove row names col; we should fix this
+    single_gest_mat <- data.matrix(read.table(datarefs[i])[, 2:9]) 
+    x_mat[i, , ] <- single_gest_mat
+    prog$tick()$print()
+  }
+  
+  return(x_mat, y_mat)
+}
 ```
 
 
 ```{r dataprepPCA, echo = FALSE}
+
+
 
 datafiles <- c()
 gestures <- 6
