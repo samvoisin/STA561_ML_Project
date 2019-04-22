@@ -6,10 +6,10 @@
 ############## ENSURE YOUR HAVE THE RESOURCES BEFORE RUNNING ##################
 ###############################################################################
 
-
+library(here)
 library(doMC)
-
-registerDoMC(cores = 3)
+setwd(here())
+registerDoMC(cores = 2)
 
 ############################### Helper Functions ##############################
 
