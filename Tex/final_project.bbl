@@ -1,11 +1,32 @@
 \begin{thebibliography}{}
 
 \bibitem [\protect \citeauthoryear {%
+Daniel~Falbel%
+}{%
+Daniel~Falbel%
+}{%
+{\protect \APACyear {2019}}%
+}]{%
+Keras}
+\APACinsertmetastar {%
+Keras}%
+\begin{APACrefauthors}%
+Daniel~Falbel, e\BPBI a.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2019}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Package `keras'} {Package `keras'}{\BBCQ}\
+  [\bibcomputersoftwaremanual].
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
 J.A.~Guerrero%
 }{%
 J.A.~Guerrero%
 }{%
-{\protect \APACyear {{\protect \bibnodate {}}}}%
+{\protect \APACyear {2018}}%
 }]{%
 biosignalEMG}
 \APACinsertmetastar {%
@@ -15,7 +36,7 @@ J.A.~Guerrero, J\BPBI M\BHBI D.%
 \end{APACrefauthors}%
 \unskip\
 \newblock
-\APACrefYearMonthDay{{\protect \bibnodate {}}}{}{}.
+\APACrefYearMonthDay{2018}{}{}.
 \newblock
 {\BBOQ}\APACrefatitle {Package `biosignalEMG'} {Package `biosignalemg'}{\BBCQ}\
   [\bibcomputersoftwaremanual].
