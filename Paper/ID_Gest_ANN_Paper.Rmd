@@ -45,23 +45,34 @@ Dimension reduction was done via a principal component analysis (PCA) of the 8 d
 
 ### Modeling
 
-The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of the same dimension.We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (Figure $2$). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
+The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of the same dimension.We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (figure $2$). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
 
+To create the computation graphs for the ANN we used the R implementation of Keras which relies on Google's TensorFlow engine for backpropogation. This allows us to add, edit, and remove layers from our models as needed during the development process. The flexibility of this modular design means we are able to prototype new models quickly.
 
 ## Results
 
 ### PCA Analysis
 
-Using the spectral decomposition we found that only $4$ of the $8$ principal components in our dataset contributed meaningfully to variance in our response. From figure $3$, we can see that these $4$ components account for approximately $80%$ of the variability we are seeing to model.
+Using the spectral decomposition we found that only $4$ of the $8$ principal components in our dataset contributed meaningfully to variance in our response. From figure $3$, we can see that these $4$ components account for approximately $80%$ of the variability we are seeking to model.
 
-![Figure 3: PCA Screeplot and cumulutive variance plot](/Graphics/1-layer-PCA)
+![Figure 3: PCA Screeplot and cumulutive variance plot](/Graphics/[INSERT PIC])
+
+By reducing the number of inputs from $8$ smoothed signals to only $4$ principle components, we were able to reduce overfitting in our model prior to ultizing any dropout layers. This reduction in overfitting decreased prediction accuracy in the validation data set only slightly see the *ANN Performance Comparison* section.
 
 
 ### ANN Performance Comparison
 
 
 
-## References
+
+
+![Figure 4: Accuracy ratio over epochs on training (blue) and validation (grean) data](/Graphics/[INSERT PIC])
+
+## References & Citations
+
+*Sergey Lobov, Nadia Krilova, I. K. V. K. and V. A. Makarov (2018). Latent factors limiting the performance of semg-interfaces. Sensors 18(1122).*
+
+*Allaire, JJ, et al. “R Interface to 'Keras'.” R Interface to 'Keras' • Keras, RStudio &amp; Google, keras.rstudio.com*
 
 
 
