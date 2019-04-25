@@ -1,5 +1,10 @@
 \documentclass{article}
-
+\usepackage{graphicx}
+\usepackage{sidecap}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{blindtext}
+\usepackage{apacite}
 % if you need to pass options to natbib, use, e.g.:
 %     \PassOptionsToPackage{numbers, compress}{natbib}
 % before loading neurips_2018
@@ -26,7 +31,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
-\title{Formatting instructions for NeurIPS 2018}
+\title{Identifying Hand Gestures through Myographic Signals via ANN}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -37,27 +42,22 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-  David S.~Hippocampus\thanks{Use footnote for providing further information
-    about author (webpage, alternative address)---\emph{not} for acknowledging
-    funding agencies.} \\
-  Department of Computer Science\\
-  Cranberry-Lemon University\\
-  Pittsburgh, PA 15213 \\
-  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  Eduardo Coronado\ \\
+  Duke University \\
   % examples of more authors
-  % \And
-  % Coauthor \\
-  % Affiliation \\
+  \And
+   Sebastian Knigge \\
+   Duke University \\
   % Address \\
   % \texttt{email} \\
-  % \AND
-  % Coauthor \\
-  % Affiliation \\
+  \AND
+  Sam Voisin \\
+  Duke University \\
   % Address \\
   % \texttt{email} \\
-  % \And
-  % Coauthor \\
-  % Affiliation \\
+  \And
+  Yuan Zheng \\
+  Duke University \\
   % Address \\
   % \texttt{email} \\
   % \And
@@ -67,336 +67,121 @@
   % \texttt{email} \\
 }
 
+% Comments
+\newtheorem{com}{Comment}
+
 \begin{document}
 % \nipsfinalcopy is no longer used
 
 \maketitle
 
 \begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-  both the left- and right-hand margins. Use 10~point type, with a vertical
-  spacing (leading) of 11~points.  The word \textbf{Abstract} must be centered,
-  bold, and in point size 12. Two line spaces precede the abstract. The abstract
-  must be limited to one paragraph.
+  \blindtext
 \end{abstract}
 
-\section{Submission of papers to NeurIPS 2018}
+\section{Introduction}
+Recent advances in surface electromyographic signal (sEMG) recordingsystems and analytics methods have encouraged the use of sEMGs in human-machine interfaces to control exoskeletons and protheses; however, challenges remain.\footnote{\cite{Sensorpaper}} Accurate classification of user movements is highly variable given the inherent noise of sEMG recording systems and per-user variability. In turn, this leads to problems downstream when attempting to convert these classifications into spatial directions (e.g. up, down, right, and left). Here, we aim to address the former challenge specifically. Our goal is to design and implement a light-weight unsupervised learning model via a multi-layered neural network to accurately identify six distinct hand gestures from sEMG data.
 
-NeurIPS requires electronic submissions.  The electronic submission site is
-\begin{center}
-  \url{https://cmt.research.microsoft.com/NeurIPS2018/}
-\end{center}
+\section{Methods}
+\label{Methods}
 
-Please read the instructions below carefully and follow them faithfully.
+Our analysis workflow was comprised of 4 main phases: preprocessing, dimension reduction via PCA, modeling, and performance comparison as shown in Figure \ref{Flow}.
 
-\subsection{Style}
-
-Papers to be submitted to NeurIPS 2018 must be prepared according to the
-instructions presented here. Papers may only be up to eight pages long,
-including figures. Additional pages \emph{containing only acknowledgments and/or
-  cited references} are allowed. Papers that exceed eight pages of content
-(ignoring references) will not be reviewed, or in any other way considered for
-presentation at the conference.
-
-The margins in 2018 are the same as since 2007, which allow for $\sim$$15\%$
-more words in the paper compared to earlier years.
-
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
-
-\subsection{Retrieval of style files}
-
-The style files for NeurIPS and other conference information are available on
-the World Wide Web at
-\begin{center}
-  \url{http://www.neurips.cc/}
-\end{center}
-The file \verb+neurips_2018.pdf+ contains these instructions and illustrates the
-various formatting requirements your NeurIPS paper must satisfy.
-
-The only supported style file for NeurIPS 2018 is \verb+neurips_2018.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
-  Microsoft Word, and RTF are no longer supported!}
-
-The \LaTeX{} style file contains three optional arguments: \verb+final+, which
-creates a camera-ready copy, \verb+preprint+, which creates a preprint for
-submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
-\verb+natbib+ package for you in case of package clash.
-
-\paragraph{New preprint option for 2018}
-If you wish to post a preprint of your work online, e.g., on arXiv, using the
-NeurIPS style, please use the \verb+preprint+ option. This will create a
-nonanonymized version of your work with the text ``Preprint. Work in progress.''
-in the footer. This version may be distributed as you see fit. Please \textbf{do
-  not} use the \verb+final+ option, which should \textbf{only} be used for
-papers accepted to NeurIPS.
-
-At submission time, please omit the \verb+final+ and \verb+preprint+
-options. This will anonymize your submission and add line numbers to aid
-review. Please do \emph{not} refer to these line numbers in your paper as they
-will be removed during generation of camera-ready copies.
-
-The file \verb+neurips_2018.tex+ may be used as a ``shell'' for writing your
-paper. All you have to do is replace the author, title, abstract, and text of
-the paper with your own.
-
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-preferred typeface throughout, and will be selected for you by default.
-Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-indentation.
-
-The paper title should be 17~point, initial caps/lower case, bold, centered
-between two horizontal rules. The top rule should be 4~points thick and the
-bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-below the title to rules. All pages should start at 1~inch (6~picas) from the
-top of the page.
-
-For the final version, authors' names are set in boldface, and each name is
-centered above the corresponding address. The lead author's name is to be listed
-first (left-most), and the co-authors' names (if different address) are set to
-follow. If there is only one co-author, list both author and co-author side by
-side.
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-All headings should be lower case (except for first word and proper nouns),
-flush left, and bold.
-
-First-level headings should be in 12-point type.
-
-\subsection{Headings: second level}
-
-Second-level headings should be in 10-point type.
-
-\subsubsection{Headings: third level}
-
-Third-level headings should be in 10-point type.
-
-\paragraph{Paragraphs}
-
-There is also a \verb+\paragraph+ command available, which sets the heading in
-bold, flush left, and inline with the text, with the heading followed by 1\,em
-of space.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-These instructions apply to everyone.
-
-\subsection{Citations within the text}
-
-The \verb+natbib+ package will be loaded for you by default.  Citations may be
-author/year or numeric, as long as you maintain internal consistency.  As to the
-format of the references themselves, any style is acceptable as long as it is
-used consistently.
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations appropriate for
-use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-If you wish to load the \verb+natbib+ package with options, you may add the
-following before loading the \verb+neurips_2018+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-If \verb+natbib+ clashes with another package you load, you can add the optional
-argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{neurips_2018}
-\end{verbatim}
-
-As submission is double blind, refer to your own published work in the third
-person. That is, use ``In the previous work of Jones et al.\ [4],'' not ``In our
-previous work [4].'' If you cite your other papers that are not widely available
-(e.g., a journal paper under review), use anonymous author names in the
-citation, e.g., an author of the form ``A.\ Anonymous.''
-
-\subsection{Footnotes}
-
-Footnotes should be used sparingly.  If you do require a footnote, indicate
-footnotes with a number\footnote{Sample of the first footnote.} in the
-text. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a horizontal rule of 2~inches (12~picas).
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-\subsection{Figures}
-
-\begin{figure}
+\begin{SCfigure}[][h]
   \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
+  \caption{Schematic of overall workflow stages: preprocessing, PCA, modeling and performance comparison}
+  \includegraphics[width=0.3\textwidth]%
+    {Graphics/Flow}% picture filename
+    \label{Flow}
+\end{SCfigure}
+
+
+\subsection{Preprocessing}
+
+We implemented a root means squared (RMS) envelope of $200$ ms overlapping time windows at $100$\textit{ms} steps via the \textit{biosignalEMG} R package to remove some of the noise generated during sEMG signal collection. As shown in Figure \ref{fig:Smooth} the preprocessing does help to get clearer signals.
+
+\begin{figure}[H]
+  \centering
+  \caption{Schematic of overall workflow stages: preprocessing, PCA, modeling and performance comparison}
+  \includegraphics[width=0.9\textwidth]%
+    {Graphics/smooth_ex}% picture filename
+    \label{fig:Smooth}
 \end{figure}
 
-All artwork must be neat, clean, and legible. Lines should be dark enough for
-purposes of reproduction. The figure number and caption always appear after the
-figure. Place one line space before the figure caption and one line space after
-the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively.
+\subsection{Dimension Reduction}
 
-You may use color figures.  However, it is best for the figure captions and the
-paper body to be legible if the paper is printed in either black/white or in
-color.
+Dimension reduction was done via a principal component analysis (PCA) of the 8 distinct channels used to record sEMG data in order to reduce the training time of the neuronal network. We achieved this via the R \textit{princomp} function that performs a spectral decomposition of the gesture design matrix.
 
-\subsection{Tables}
+\subsection{Modeling}
 
-All tables must be centered, neat, clean and legible.  The table number and
-title always appear before the table.  See Table~\ref{sample-table}.
+The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of equal dimension. We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (Figure \ref{fig:1Layer}). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
 
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-Note that publication-quality tables \emph{do not contain vertical rules.} We
-strongly suggest the use of the \verb+booktabs+ package, which allows for
-typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-\begin{table}
-  \caption{Sample table title}
-  \label{sample-table}
+\begin{figure}[h]
+\centering
+\begin{subfigure}{.5\textwidth}
   \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+  \includegraphics[width=.9\linewidth]{Graphics/1-layer-NN}
+  \caption{Schematic of input hidden and classification layers of ANN with all 8 channels as input}
+  \label{fig:1Layer}
+\end{subfigure}%
+\begin{subfigure}{.6\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{Graphics/2-layer-NN}
+  \caption{Schematic of input hidden and classification layers of ANN with 4 principle components as input}
+  \label{fig:2Layer}
+\end{subfigure}
+\caption{Neuronal Net structures}
+\label{gig:Model}
+\end{figure}
 
-\section{Final instructions}
+To create the computation graphs for the ANN we used the R implementation of Keras which relies on Google's TensorFlow engine for backpropogation. This allows us to add, edit, and remove layers from our models as needed during the development process. The flexibility of this modular design means we are able to prototype new models quickly.
 
-Do not change any aspects of the formatting parameters in the style files.  In
-particular, do not modify the width or length of the rectangle the text should
-fit into, and do not change font sizes (except perhaps in the
-\textbf{References} section; see below). Please note that pages should be
-numbered.
+\begin{com}
+To assess the performance of each ANN, we used an $80/20$ split our data to generate a gesture-specific training and a testing sets. These were done automatically in the Keras package via random sampling. We then assessed the classifcation accuracy of each ANN using a categorical cross entropy metric which measures the \textit{Kullback-Leibler} (KL) divergence between the true distribution of the response variable and the distribution of the predictions.
+\end{com}
 
-\section{Preparing PDF files}
+\section{Results}
 
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
+\subsection{Principal Component Analysis}
 
-Fonts were the main cause of problems in the past years. Your PDF file must only
-contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
-achieve this.
+Using the spectral decomposition we found that only $4$ of the $8$ principal components in our dataset contributed meaningfully to variance in our response. From figure $3$, we can see that these $4$ components account for approximately $80$\% of the variability we are seeking to model.
 
-\begin{itemize}
 
-\item You should directly generate PDF files using \verb+pdflatex+.
+\begin{figure}[H]
+  \centering
+  \caption{PCA Screeplot and cumulutive variance plot}
+  \includegraphics[width=0.9\textwidth]%
+    {Graphics/PCA_Plots/PCA_screeplot-150dpi}% picture filename
+    \label{fig:PCA}
+\end{figure}
 
-\item You can check which fonts a PDF files uses.  In Acrobat Reader, select the
-  menu Files$>$Document Properties$>$Fonts and select Show All Fonts. You can
-  also use the program \verb+pdffonts+ which comes with \verb+xpdf+ and is
-  available out-of-the-box on most Linux machines.
 
-\item The IEEE has recommendations for generating PDF files whose fonts are also
-  acceptable for NeurIPS. Please see
-  \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
+By reducing the number of inputs from $8$ smoothed signals to only $4$ principle components, we were able to reduce overfitting in our model prior to ultizing any dropout layers. This reduction in overfitting decreased prediction accuracy in the validation data set only slightly see the \textit{ANN Performance Comparison} section.
 
-\item \verb+xfig+ "patterned" shapes are implemented with bitmap fonts.  Use
-  "solid" shapes instead.
 
-\item The \verb+\bbold+ package almost always uses bitmap fonts.  You should use
-  the equivalent AMS Fonts:
-\begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or \verb+\mathbb{C}+
-for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You can also use the following
-workaround for reals, natural and complex:
-\begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-Note that \verb+amsfonts+ is automatically loaded by the \verb+amssymb+ package.
+\subsection{ANN Performance Comparison}
 
-\end{itemize}
 
-If your file contains type 3 fonts or non embedded TrueType fonts, we will ask
-you to fix it.
+\begin{center}
+-- Predictive Accuracy Using $8$ Smoothed Channels --\\
 
-\subsection{Margins in \LaTeX{}}
+-- Predictive Accuracy Using $4$ Principle Components --
+\end{center}
 
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always specify the
-figure width as a multiple of the line width as in the example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
 
-A number of width problems arise when \LaTeX{} cannot properly hyphenate a
-line. Please give LaTeX hyphenation hints using the \verb+\-+ command when
-necessary.
 
-\subsubsection*{Acknowledgments}
+\newpage
 
-Use unnumbered third level headings for the acknowledgments. All acknowledgments
-go at the end of the paper. Do not include acknowledgments in the anonymized
-submission, only in the final paper.
+
+
+
 
 \section*{References}
 
-References follow the acknowledgments. Use unnumbered first-level heading for
-the references. Any choice of citation style is acceptable as long as you are
-consistent. It is permissible to reduce the font size to \verb+small+ (9 point)
-when listing the references. {\bf Remember that you can use more than eight
-  pages as long as the additional pages contain \emph{only} cited references.}
-\medskip
 
-\small
+\bibliographystyle{apacite}
+\bibliography{References}
 
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
 
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-TELOS/Springer--Verlag.
-
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-recall at excitatory recurrent synapses and cholinergic modulation in rat
-hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
 
 \end{document}

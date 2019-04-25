@@ -66,7 +66,7 @@
 \usepackage{titling}
 
 % Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
+\providecommand{\subtitle}[1]{
   \posttitle{
     \begin{center}\large#1\end{center}
     }
@@ -109,18 +109,120 @@ data.
 
 Our analysis workflow was comprised of 4 main phases: preprocessing,
 dimension reduction via PCA, modeling, and performance comparison as
-shown in Figure 1.
+shown in Figure \(1\).
 
 \begin{figure}
 \centering
 \includegraphics{/Graphics/Flow.png}
-\caption{Schematic of overall workflow stages: preprocessing, PCA,
-modeling and performance comparison}
+\caption{Figure 1: Schematic of overall workflow stages: preprocessing,
+PCA, modeling and performance comparison}
 \end{figure}
+
+\subsubsection{Data Preprocessing}\label{data-preprocessing}
+
+We implemented a root means squared (RMS) envelope of \(200\) ms
+overlapping time windows at \(100\) \(ms\) steps via the biosignalEMG R
+package to remove some of the noise generated during sEMG signal
+collection.
+
+\begin{figure}
+\centering
+\includegraphics{/Graphics/smooth_ex.png}
+\caption{Figure 2: sEMG data before and after RMS envelope}
+\end{figure}
+
+\subsubsection{Dimension Reduction}\label{dimension-reduction}
+
+Dimension reduction was done via a principal component analysis (PCA) of
+the 8 distinct channels used to record sEMG data in order to reduce the
+training time of the neuronal network. We achieved this via the R
+\texttt{princomp} function that performs a spectral decomposition of the
+gesture design matrix.
+
+\subsubsection{Modeling}\label{modeling}
+
+The final step of preprocessing requires adding ``padding'' to the end
+of each gesture's data matrix. This is done so that the vectors passed
+into the models are of equal dimension. We then developed two Artificial
+Neural Networks (ANN), one with all components and a second with a
+subset selected during the dimension reduction stage (figure \(3\)).
+Each of these has a single hidden layer with eight hidden nodes having
+linear activation. These eight nodes feed into six output nodes with a
+soft-max activation function. This model was inspired by Lobov et al
+(\(2018\)).
+
+\begin{figure}
+\centering
+\includegraphics{/Graphics/1-layer-NN.png}
+\caption{Figure 3a: Schematic of input hidden and classification layers
+of ANN with all 8 channels as input}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{/Graphics/1-layer-PCA-NN.png}
+\caption{Figure 3b: Schematic of input hidden and classification layers
+of ANN with 4 principle components as input}
+\end{figure}
+
+To create the computation graphs for the ANN we used the R
+implementation of Keras which relies on Google's TensorFlow engine for
+backpropogation. This allows us to add, edit, and remove layers from our
+models as needed during the development process. The flexibility of this
+modular design means we are able to prototype new models quickly.
+
+\emph{Train/Test Sets and Performance:}
+
+\begin{com}
+To assess the performance of each ANN, we used an $80/20$ split our data to generate a gesture-specific training and a testing sets. These were done automatically in the Keras package via random sampling. We then assessed the classifcation accuracy of each ANN using a categorical cross entropy metric which measures the *Kullback-Leibler* (KL) divergence between the true distribution of the response variable and the distribution of the predictions.
+\end{com}
 
 \subsection{Results}\label{results}
 
-\subsection{References}\label{references}
+\subsubsection{PCA Analysis}\label{pca-analysis}
+
+Using the spectral decomposition we found that only \(4\) of the \(8\)
+principal components in our dataset contributed meaningfully to variance
+in our response. From figure \(3\), we can see that these \(4\)
+components account for approximately \(80%\) of the variability we are
+seeking to model.
+
+\begin{figure}
+\centering
+\includegraphics{/Graphics/PCA_Plots/PCA_screeplot-150dpi.png}
+\caption{Figure 3: PCA Screeplot and cumulutive variance plot}
+\end{figure}
+
+By reducing the number of inputs from \(8\) smoothed signals to only
+\(4\) principle components, we were able to reduce overfitting in our
+model prior to ultizing any dropout layers. This reduction in
+overfitting decreased prediction accuracy in the validation data set
+only slightly see the \emph{ANN Performance Comparison} section.
+
+\subsubsection{ANN Performance
+Comparison}\label{ann-performance-comparison}
+
+\textbf{Predictive Accuracy Using \(8\) Smoothed Channels}
+
+\textbf{Predictive Accuracy Using \(4\) Principle Components}
+
+\begin{figure}
+\centering
+\includegraphics{/Graphics/{[}INSERT PIC{]}}
+\caption{Figure 4: Accuracy ratio over epochs on training (blue) and
+validation (grean) data}
+\end{figure}
+
+\subsection{References \& Citations}\label{references-citations}
+
+\emph{Sergey Lobov, Nadia Krilova, I. K. V. K. and V. A. Makarov (2018).
+Latent factors limiting the performance of semg-interfaces. Sensors
+18(1122).}
+
+\emph{Allaire, JJ, et al. ``R Interface to `Keras'.'' R Interface to
+`Keras' • Keras, RStudio \& Google, keras.rstudio.com}
+
+\emph{Goodfellow, Ian, et al. Deep Learning. MIT Press, 2016.}
 
 
 \end{document}

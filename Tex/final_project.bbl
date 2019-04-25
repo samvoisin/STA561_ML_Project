@@ -1,0 +1,30 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Sergey~Lobov%
+\ \BBA {} Makarov%
+}{%
+Sergey~Lobov%
+\ \BBA {} Makarov%
+}{%
+{\protect \APACyear {2018}}%
+}]{%
+Sensorpaper}
+\APACinsertmetastar {%
+Sensorpaper}%
+\begin{APACrefauthors}%
+Sergey~Lobov, I\BPBI K\BPBI V\BPBI K., Nadia~Krilova%
+\BCBT {}\ \BBA {} Makarov, V\BPBI A.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2018}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Latent Factors Limiting the Performance of
+  sEMG-Interfaces} {Latent factors limiting the performance of
+  semg-interfaces}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Sensors}{18}{1122}{}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

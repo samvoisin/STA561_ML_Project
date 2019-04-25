@@ -15,18 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-Recent advances in surface electromyographic signal (sEMG)
-recordingsystems and analytics methods have encouraged the use
-of sEMGs in human-machine interfaces to control exoskeletons
-and protheses; however, challenges remain. Accurate classification
-of user movements is highly variable given the inherent noise
-of sEMG recording systems and per-user variability. In turn, this
-leads to problems downstream when attempting to convert these
-classifications into spatial directions (e.g. up, down, right, and left).
-Here, we aim to address the former challenge specifically. Our goal
-is to design and implement a light-weight unsupervised learning
-model via a multi-layered neural network to accurately identify six
-distinct hand gestures from sEMG data.
+Recent advances in surface electromyographic signal (sEMG) recordingsystems and analytics methods have encouraged the use of sEMGs in human-machine interfaces to control exoskeletons and protheses; however, challenges remain. Accurate classification of user movements is highly variable given the inherent noise of sEMG recording systems and per-user variability. In turn, this leads to problems downstream when attempting to convert these classifications into spatial directions (e.g. up, down, right, and left). Here, we aim to address the former challenge specifically. Our goal is to design and implement a light-weight unsupervised learning model via a multi-layered neural network to accurately identify six distinct hand gestures from sEMG data.
 
 
 ## Methods
@@ -39,16 +28,25 @@ Our analysis workflow was comprised of 4 main phases: preprocessing, dimension r
 
 We implemented a root means squared (RMS) envelope of $200$ ms overlapping time windows at $100$ $ms$ steps via the biosignalEMG R package to remove some of the noise generated during sEMG signal collection.
 
+![Figure 2: sEMG data before and after RMS envelope](/Graphics/smooth_ex.png)
+
 ### Dimension Reduction
 
 Dimension reduction was done via a principal component analysis (PCA) of the 8 distinct channels used to record sEMG data in order to reduce the training time of the neuronal network. We achieved this via the R `princomp` function that performs a spectral decomposition of the gesture design matrix.
 
 ### Modeling
 
-The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of equal dimension. We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (figure $2$). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
+The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of equal dimension. We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (figure $3$). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
+
+![Figure 3a: Schematic of input hidden and classification layers of ANN with all 8 channels as input](/Graphics/1-layer-NN.png)
+
+![Figure 3b: Schematic of input hidden and classification layers of ANN with 4 principle components as input](/Graphics/1-layer-PCA-NN.png)
 
 To create the computation graphs for the ANN we used the R implementation of Keras which relies on Google's TensorFlow engine for backpropogation. This allows us to add, edit, and remove layers from our models as needed during the development process. The flexibility of this modular design means we are able to prototype new models quickly.
 
+*Train/Test Sets and Performance:*
+
+To assess the performance of each ANN, we used an $80/20$ split our data to generate a gesture-specific training and a testing sets. These were done automatically in the Keras package via random sampling. We then assessed the classifcation accuracy of each ANN using a categorical cross entropy metric which measures the *Kullback-Leibler* (KL) divergence between the true distribution of the response variable and the distribution of the predictions.
 
 ## Results
 
@@ -71,6 +69,7 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 
 ![Figure 4: Accuracy ratio over epochs on training (blue) and validation (grean) data](/Graphics/[INSERT PIC])
+
 
 ## References & Citations
 
