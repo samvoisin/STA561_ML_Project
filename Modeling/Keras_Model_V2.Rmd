@@ -80,10 +80,10 @@ dataprep <- function(roo_dir, n_gests, n_chan){
 
 ```{r dataprepPCA, echo = FALSE}
 root <- "../PCA_EMG_data_for_gestures/"
-xy_mat = dataprep(root, n_gests = 6, n_chan = 8)
-x_mat = xy_mat[[1]]
-y_mat = xy_mat[[2]]
-numobs = xy_mat[[3]]
+xy_mat <- dataprep(root, n_gests = 6, n_chan = 8)
+x_mat <- xy_mat[[1]]
+y_mat <- xy_mat[[2]]
+numobs <- xy_mat[[3]]
 rm(xy_mat)
 ```
 
@@ -180,12 +180,27 @@ cvANN <- function(x_dat, y_dat,
   return(k_hist) # Return list of length(folds), each entry being a dataframe
 }
 
-testNN <- cvANN(x_dat = x_mat, y_dat = y_mat, pcomp = 4, neurons_per_layer = 8, layers = 1,out_units = 6, out_met = c("accuracy"), cvfolds = 5, verb = 0 )
+testNN <- cvANN(x_dat = x_mat,
+                y_dat = y_mat,
+                pcomp = 4,
+                neurons_per_layer = 8,
+                layers = 1,
+                out_units = 6,
+                out_met = c("accuracy"),
+                cvfolds = 5,
+                verb = 0)
 
 ```
 
 
+```{r}
 
+testNN[[3]] %>% ggplot(aes(x = epoch, y = value, color = data)) + geom_line()
+
+### ????????? wtf
+
+
+```
 
 
 
