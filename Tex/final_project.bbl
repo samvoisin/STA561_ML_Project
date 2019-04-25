@@ -1,6 +1,27 @@
 \begin{thebibliography}{}
 
 \bibitem [\protect \citeauthoryear {%
+J.A.~Guerrero%
+}{%
+J.A.~Guerrero%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+}]{%
+biosignalEMG}
+\APACinsertmetastar {%
+biosignalEMG}%
+\begin{APACrefauthors}%
+J.A.~Guerrero, J\BPBI M\BHBI D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Package `biosignalEMG'} {Package `biosignalemg'}{\BBCQ}\
+  [\bibcomputersoftwaremanual].
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
 Sergey~Lobov%
 \ \BBA {} Makarov%
 }{%
