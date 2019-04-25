@@ -1,0 +1,100 @@
+---
+title: "Visualizing_cleaning"
+author: "Sam Voisin, Eduardo Coronado, Sebastian Knigge, Yuan Zheng"
+date: "April 25, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+
+
+```
+
+
+### Visualizing effect of smoothing on signals
+
+
+```{r data, echo = FALSE}
+            
+root1 <- "../EMG_data_for_gestures-master/"
+root2 <- "../clean_EMG_data_for_gestures-master/"
+
+file_raw <- paste0(root1, "01/1_raw_data_13-12_22.03.16.txt")
+file_clean <- paste0(root2, "01/01_gesture_1_1_1_clean.txt")
+
+subj01_raw <- read.table(file_raw, header = TRUE)
+subj01_clean <- read.table(file_clean, header = TRUE)
+
+
+
+
+```
+
+
+```{r plotfcn, echo = FALSE}
+
+# helper function for plotting gestures
+
+plot_gest_sig <- function(subjdf_raw, subjdf_clean, gestnum, subjnum, timecut) {
+  # plot a single gesture over time
+  
+  p1 <- subjdf_raw %>% 
+    filter(class == gestnum) %>%
+    filter(time > 2500 & time < 4500) %>%
+    gather(key = "channel", value = "EMG_Measure", -time, -class) %>%
+    ggplot(aes(x = time, y = EMG_Measure, color = channel)) + 
+    ggtitle(paste0("Subject ", subjnum, ": Gesture ", gestnum)) +
+    labs(x = "", y = "sEMG Reading") +
+    geom_line()
+    
+  p2 <- subjdf_clean %>%
+    select(-row.names) %>%
+    filter(time > 2500 & time < 4500) %>% 
+    gather(key = "channel", value = "EMG_Measure", -time) %>%
+    ggplot(aes(x = time, y = EMG_Measure, color = channel)) + 
+    labs(x = "Time (ms)", y = "sEMG Reading") +
+    geom_line()
+  
+  grid.arrange(p1, p2)
+  
+}
+
+```
+
+
+
+```{r plots}
+
+
+plot_gest_sig(subj01_raw, subj01_clean, 1, "01", 5000)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
