@@ -108,8 +108,15 @@ rm(xy_mat)
 ## Output: history object with acc metrics as data frame for each fold
 
 cvANN <- function(x_dat, y_dat, 
-                  pcomp, neurons_per_layer, layers = 1, 
-                  out_units, out_met, cvfolds = 5, verb = 0){
+                  pcomp,
+                  neurons_per_layer,
+                  layers = 1,
+                  dropout = FALSE,
+                  dropout_rate = 0.0,
+                  out_units,
+                  out_met,
+                  cvfolds = 5,
+                  verb = FALSE) {
   
   folds <- caret::createFolds(y_dat[,1], k = cvfolds) # Create folds for CV
   k_hist = list() # Create empty list to store acc metrics for each fold
@@ -149,10 +156,14 @@ cvANN <- function(x_dat, y_dat,
       layer_dense(units = neurons_per_layer, input_shape = x_dimspc[-1])
     
     # If layers >1 then add # of layers specified by user each with neurons_per_layer
-    if (layers >1){
-      for (l in 1:layers){
+    if (layers >1) {
+      for (l in 1:layers) {
         ANN %>%
           layer_dense(units = neurons_per_layer)
+        if (dropout) {
+          ANN %>%
+            layer_dropout(dropout_rate)
+        }
       }
     }
     
@@ -185,19 +196,17 @@ testNN <- cvANN(x_dat = x_mat,
                 pcomp = 4,
                 neurons_per_layer = 8,
                 layers = 1,
+                dropout = TRUE,
+                dropout_rate = 0.2,
                 out_units = 6,
                 out_met = c("accuracy"),
                 cvfolds = 5,
-                verb = 0)
+                verb = TRUE)
 
 ```
 
 
 ```{r}
-
-testNN[[3]] %>% ggplot(aes(x = epoch, y = value, color = data)) + geom_line()
-
-### ????????? wtf
 
 
 ```
