@@ -86,7 +86,9 @@ Recent advances in surface electromyographic signal (sEMG) recordingsystems and 
 \section{Methods}
 \label{Methods}
 
-Our analysis workflow was comprised of 4 main phases: preprocessing, dimension reduction via PCA, modeling, and performance comparison as shown in Figure \ref{Flow}.
+
+\subsection{Workflow Overview}
+For this project our workflow was comprised of 4 main phases: preprocessing, dimension reduction via PCA, modeling, and performance comparison as shown in Figure \ref{Flow} below. 
 
 \begin{SCfigure}[][h]
   \centering
@@ -97,9 +99,22 @@ Our analysis workflow was comprised of 4 main phases: preprocessing, dimension r
 \end{SCfigure}
 
 
+\subsection{sEMG Data}
+Raw sEMG signal data from 36 individuals was obtained online from Lobov et al \footnote{Ibid}. Two series were recorded per individual, each comprised of signals obtained via 8 equally spaced sensors around the forearm (i.e. channels). For each series, subjects were asked to performed a set of 6 basic hand gestures. Each gesture was performed for 3 seconds with a 3 second pause in between. Gestures classification scheme is shown in Table 1. 
+
+\begin{figure}[!htb]
+  \centering
+  \captionsetup{labelformat=empty}
+\caption{Table 1. sEMG gesture classifications}
+  \includegraphics[width=0.8\textwidth]%
+    {Graphics/table1}% picture filename
+\end{figure}
+
+
+
 \subsection{Preprocessing}
 
-We implemented a root means squared (RMS) envelope of $200$ ms overlapping time windows at $100$\textit{ms} steps via the \textit{biosignalEMG} R package\footnote{\cite{biosignalEMG}} to remove some of the noise generated during sEMG signal collection. As shown in Figure \ref{fig:Smooth} the preprocessing does help to get clearer signals.
+We implemented a root means squared (RMS) envelope of $200$ ms overlapping time windows at $100$\textit{ms} steps via the \textit{biosignalEMG} R package\footnote{\cite{biosignalEMG}} to remove some of the noise generated during sEMG signal collection. As shown in Figure \ref{fig:Smooth} the pre-processing does help provide a means to generate clearer signals that show distinct patterns from each channel per gesture
 
 \begin{figure}[H]
   \centering
@@ -109,37 +124,59 @@ We implemented a root means squared (RMS) envelope of $200$ ms overlapping time 
     \label{fig:Smooth}
 \end{figure}
 
+Subsequently, the data was separated according to the gesture classifications (1-6) provided for each time step for further analysis.
+
 \subsection{Dimension Reduction}
 
-Dimension reduction was done via a principal component analysis (PCA) of the 8 distinct channels used to record sEMG data in order to reduce the training time of the neuronal network. We achieved this via the R \textit{princomp} function that performs a spectral decomposition of the gesture design matrix.
+Dimension reduction for each gesture was done via a principal component analysis (PCA) of the 8 distinct channels used to record sEMG data in order to identify the most relevant channels for gesture classification and potentially  reduce the training time of the neuronal network. We achieved this via the R \textit{princomp} function that performs a spectral decomposition via singular value decomposition (1) of the gesture design matrix ($\mathbf{X}$)
+\begin{equation}
+\mathbf{X = U D V'}
+\end{equation}
+were $U$ and $V$ are the row and column space eigen vectors and $D$ is a diagonal matrix with the eigen values.
 
 \subsection{Modeling}
 
-The final step of preprocessing requires adding "padding" to the end of each gesture's data matrix. This is done so that the vectors passed into the models are of equal dimension. We then developed two Artificial Neural Networks (ANN), one with all components and a second with a subset selected during the dimension reduction stage (Figure \ref{fig:1Layer}). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al ($2018$).
+Before fitting an Artificial Neural Network (ANN) we "padded" the ends of each gesture's data matrix to ensure that the vectors passed into the models are of equal dimension. We then developed two ANN with one hidden layer, the first with all components and a second with channels subset selected during the dimension reduction stage (Figures  \ref{fig:1Layer} and \ref{fig:PCA1Layer}, respectively ). Each of these has a single hidden layer with eight hidden nodes having linear activation. These eight nodes feed into six output nodes with a soft-max activation function. This model was inspired by Lobov et al's approach.\footnote{\cite{Sensorpaper}}
 
 \begin{figure}[h]
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{Graphics/1-layer-NN}
-  \caption{Schematic of input hidden and classification layers of ANN with all 8 channels as input}
+  \caption{Schematic of ANN with all 8 channels }
   \label{fig:1Layer}
 \end{subfigure}%
 \begin{subfigure}{.6\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{Graphics/2-layer-NN}
-  \caption{Schematic of input hidden and classification layers of ANN with 4 principle components as input}
-  \label{fig:2Layer}
+  \includegraphics[width=.7\linewidth]{Graphics/1-layer-PCA-NN}
+  \caption{Schematic of ANN with 4 PC channels}
+  \label{fig:PCA1Layer}
 \end{subfigure}
-\caption{Neuronal Net structures}
+\caption{Artificial Neuronal Net structures}
 \label{gig:Model}
 \end{figure}
 
-To create the computation graphs for the ANN we used the R implementation of Keras\footnote{\cite{Keras}} which relies on Google's TensorFlow engine for backpropogation. This allows us to add, edit, and remove layers from our models as needed during the development process. The flexibility of this modular design means we are able to prototype new models quickly.
+The  computation graphs for the ANN were generated via an R implementation of Keras\footnote{\cite{Keras}}, which relies on Google's TensorFlow engine for backpropogation. This allowed us to implement a flexible design framework so that we could  add, edit, and remove layers from our models quickly and efficiently during our development process. \\
+Afterward, five additional ANN were generated with an increasing number of hidden layers ($l=1,...5$) but only using the principal components as inputs. Figure \ref{fig:5Layers} shows a schematic representation of how each hidden layer was added following a similar process for inputs and outputs as for the initial ANNs.
 
-\begin{com}
-To assess the performance of each ANN, we used an $80/20$ split our data to generate a gesture-specific training and a testing sets. These were done automatically in the Keras package via random sampling. We then assessed the classifcation accuracy of each ANN using a categorical cross entropy metric which measures the \textit{Kullback-Leibler} (KL) divergence between the true distribution of the response variable and the distribution of the predictions.
-\end{com}
+\begin{figure}[h]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{Graphics/1-layer-NN}
+\end{subfigure}%
+\begin{subfigure}{.6\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{Graphics/2-layer-NN}
+\end{subfigure}
+\caption{Increasing number of hidden layers in Artificial Neuronal Net structure}
+\label{fig:5Layers}
+\end{figure}
+
+\subsection{Performance Assessment}
+To assess the performance of each ANN, we used an k-fold cross validation strategy ($k =5$) to split our data to generate a gesture-specific training and a testing sets. These were using the \textit{caret} R package via random sampling. We then assessed the average classification accuracy of each ANN using a categorical cross entropy metric which measures the \textit{Kullback-Leibler} (KL) divergence between the true distribution of the response variable and the distribution of the predictions. This was done for both the initial ANN previously mentioned and shown in Figures \ref{fig:1Layer} and \ref{fig:PCA1Layer}, as well the subsequent ANN with increasing number of layers from Figure \ref{fig:5Layers}.\\
+Additionally, our code was timed to assess the computational costs versus gains in accuracy as we increase the number of layers.
+
 
 \section{Results}
 
@@ -201,9 +238,6 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 
 
-
-
-\section*{References}
 
 
 \bibliographystyle{apacite}

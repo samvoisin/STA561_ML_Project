@@ -191,23 +191,78 @@ cvANN <- function(x_dat, y_dat,
   return(k_hist) # Return list of length(folds), each entry being a dataframe
 }
 
-testNN <- cvANN(x_dat = x_mat,
+
+create_results_df = function(cv_ann_out, layers){
+  master_df <- cv_ann_out[[1]] %>% filter( metric == "acc")
+  n = dim(master_df)[1]
+  master_df <- master_df %>% 
+    mutate(cv_fold = rep(1, n))
+ 
+
+  for (i in 2:5){
+    tmp_df <- cv_ann_out[[i]] %>% filter(metric == "acc") %>% 
+      mutate(cv_fold = rep(i, n))
+    master_df = bind_rows(master_df, tmp_df)
+  }
+  
+  master_df <- master_df %>% mutate(cv_fold = factor(cv_fold))
+  
+  train_mean <- master_df %>% 
+    filter(data == "training") %>%
+    group_by(epoch) %>% 
+    summarize(training_avg = mean(value))
+  
+  test_mean <- master_df %>% 
+    filter(data == "validation") %>% 
+    group_by(epoch) %>% 
+    summarize(validation_avg = mean(value))
+    
+  avg_master <- left_join(train_mean, test_mean) %>% 
+    gather(key, vals, -epoch)
+  
+  saveRDS(master_df,file = paste0("CV_ANN_",layers,"_layers.rds"))
+  saveRDS(avg_master, file = paste0("Avg_CV_ANN_",layers,"_layers.rds"))
+}
+
+
+max_layers = 5
+for (m in 1:max_layers){
+  system.time(tmp <- cvANN(x_dat = x_mat,
                 y_dat = y_mat,
                 pcomp = 4,
                 neurons_per_layer = 8,
-                layers = 1,
+                layers = m,
                 dropout = TRUE,
                 dropout_rate = 0.2,
                 out_units = 6,
                 out_met = c("accuracy"),
                 cvfolds = 5,
-                verb = TRUE)
+                verb = TRUE))
+  
+  create_results_df(tmp, m)
+  
+  
+}
+  
+
 
 ```
 
 
 ```{r}
 
+test = read_rds("Avg_CV_ANN_5_layers.rds")
+ggplot(test, aes(x = epoch, y = vals, color = key ), alpha = 0.8) + 
+  geom_point() + 
+  geom_line(alpha = 0.8) +
+  theme_bw() +
+  labs(Y = "Accuracy", x = "Epoch") +
+  scale_color_discrete(name = "Legend", labels = c("Training Avg", "Validation Avg")) +
+  theme(legend.position = "bottom")
+
+
+plot_path = "../Tex/Graphics"
+ggsave(file.path(plot_path,"Avg_CV_ANN_5_layers"), dpi = 150, device = "png")
 
 ```
 
