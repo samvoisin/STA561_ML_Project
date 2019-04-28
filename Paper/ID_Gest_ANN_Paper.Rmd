@@ -70,7 +70,7 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 **Predictive Accuracy Using $4$ Principle Components**
 
 
-![Figure 4: Accuracy ratio over epochs on training (blue) and validation (grean) data](/Graphics/[INSERT PIC])
+![Figure 4: Accuracy ratio over epochs on training (blue) and validation (green) data](/Graphics/[INSERT PIC])
 
 ## Conclusion
 
