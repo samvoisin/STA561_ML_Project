@@ -183,9 +183,11 @@ Additionally, our code was timed to assess the computational costs versus gains 
 \subsection{Principal Component Analysis}
 
 Using the spectral decomposition we found that only $4$ of the $8$ principal components in our dataset contributed meaningfully to variance in our response. From figure $3$, we can see that these $4$ components account for approximately $80$\% of the variability we are seeking to model.\\
-We might be interested in compareable results, or a decision rule which is applicable to different data sets. We introduce a relative measure $\kappa$ which can be used for the PCA of data sets with any dimension.
+We might be interested in compareable results, or a decision rule which is applicable to different data sets. We introduce a relative measure $\kappa$ which can be used for the PCA of data sets with any dimension. Let $p$ be the number of dimensions of the original data set.
 
-\[\kappa_i=\frac{{proportional\ explained\ variance}_i}{\frac{1}{{\#\ of\ dimensions}}}\]
+\[\kappa_i=\frac{{proportional\ explained\ variance}_i}{\frac{1}{p}}={proportional\ explained\ variance}_i\times p\]
+
+for $i=1,...,p$.
 
 One can define a decision rule, which is dempendent on a threshold $\delta$: \textit{Include $PC_i \ \forall \ \kappa_i>\delta$}
 
@@ -227,9 +229,9 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 
 \begin{center}
--- Predictive Accuracy Using $8$ Smoothed Channels --\\
 
--- Predictive Accuracy Using $4$ Principle Components --
+From the timing table for every number of layers (layer), we can see that the most time-wasting method is 4 layers ANN, which will take about 556s on the test dataset, while the fastest method is 1 layer ANN, which will take about 300s on the same dataset. It turns out that 5 layers ANN is less time wasting that 4 layers ANN, which only takes about 500s. Considering the remarkable improvement on the performance after using the multiple layers ANN, the little amount of time sacrifice on the computasion is totally acceptable. 
+  
 \end{center}
 
 
