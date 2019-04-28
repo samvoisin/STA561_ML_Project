@@ -74,7 +74,7 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 ## Conclusion
 
-Through the analysis and modeling procedures described above, we have shown that it is possible to predict gestures using using artificianl neural networks trained on sEMG signals data. Although increasing the number of dense hidden layers in the network did not result in greater predictive power, we were able to reduce the computational cost of fitting the ANN and making predictions with the ANN using a conceptually simple spectral decomposition for dimension reduction.
+Through the analysis and modeling procedures described above, we have shown that it is possible to predict gestures using using artificial neural networks trained on sEMG signals data. Although increasing the number of dense hidden layers in the network did not result in greater predictive power, we were able to reduce the computational cost of fitting the ANN using a conceptually simple spectral decomposition for dimension reduction.
 
 This result is important because it not only serves to validate some of the results of the original research performed by Lobov *et al* but it also demonstrates that they could have achieved greater accuracy by slightly extending the depth of their multilayer perceptron. Furthermore, our work shows that the next generation of prosthetics can be equipped with sensors to record sEMG signals and pre-trained ANNs that are capable of responding to the user's nervous impulses in an intelligent, automated manner. Furthermore, we believe that the results presented here can be improved upon through further experimentation into recurrent neural network models and hardware specialized more specialized to this task.
 
