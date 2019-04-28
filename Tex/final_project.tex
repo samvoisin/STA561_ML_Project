@@ -225,12 +225,45 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 \subsection{ANN Performance Comparison}
 
+\begin{table}[!htbp] \centering 
+  \caption{Timing and Accurary} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{0pt}} ccccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & One Layer & Two Layers & Three Layers & Four Layers & Five Layers  \\ 
+\hline \\[-1.8ex] 
+Training Time \\  System Time & $55.267s$ & $77.497s$ & $90.501s$ & $110.841s$ & $122.357s$ \\ 
+\hline \\
+Accuracy \\ On Validation Dataset & $0.750$ & $0.735$ & $0.715$ & $0.720$ & $0.655$  \\ 
+Ratio of change in accuracy\\ to change in time & $\textbackslash$ & $-0.0006$ & $-0.015$ & $0.002$ & $-0.005$  \\ 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
 
-\begin{center}
+\begin{figure}[H]
+  \centering
+  \caption{One Layer Accuracy}
+  \includegraphics[width=0.5\textwidth]%
+    {Graphics/Avg_CV_ANN_1_layers}% picture filename
+    \label{fig:1 layer}
+\end{figure}
 
-From the timing table for every number of layers (layer), we can see that the most time-wasting method is 4 layers ANN, which will take about 556s on the test dataset, while the fastest method is 1 layer ANN, which will take about 300s on the same dataset. It turns out that 5 layers ANN is less time wasting that 4 layers ANN, which only takes about 500s. Considering the remarkable improvement on the performance after using the multiple layers ANN, the little amount of time sacrifice on the computasion is totally acceptable. 
-  
-\end{center}
+\begin{figure}[H]
+  \centering
+  \caption{Five Layers Accuracy}
+  \includegraphics[width=0.5\textwidth]%
+    {Graphics/Avg_CV_ANN_5_layers}% picture filename
+    \label{fig:5 layer}
+\end{figure}
+
+From the timing and accuracy table for every number of layers (layer) and two plots above, we can see that the most time-wasting method is 5 layers ANN, which will take about 122s on the training, while the fastest method is 1 layer ANN, which only takes about 55s on the same training dataset. This result is nort surprising because as we add more layers, the computation intensity increases at the same time. \newline
+Now condering the classification accuracy, it turns out that one layer Neural Network has the highest accuracy on validation dataset and the performance doesn't improve when adding more layers but become worse sometimes.\newline
+Another thing that is worth to point out is that when doing validation, the accuracy on the validation dataset exceeds that on the training set and this kind of thing doesn't always happen. It is partly because of the characteristic of our dataset. Since it highly depends on time sequence, the training dataset and validation dataset are highly correlated and we may have underfitting on the training set.
+
+
+
 
 
 
