@@ -183,9 +183,11 @@ Additionally, our code was timed to assess the computational costs versus gains 
 \subsection{Principal Component Analysis}
 
 Using the spectral decomposition we found that only $4$ of the $8$ principal components in our dataset contributed meaningfully to variance in our response. From figure $3$, we can see that these $4$ components account for approximately $80$\% of the variability we are seeking to model.\\
-We might be interested in compareable results, or a decision rule which is applicable to different data sets. We introduce a relative measure $\kappa$ which can be used for the PCA of data sets with any dimension.
+We might be interested in compareable results, or a decision rule which is applicable to different data sets. We introduce a relative measure $\kappa$ which can be used for the PCA of data sets with any dimension. Let $p$ be the number of dimensions of the original data set.
 
-\[\kappa_i=\frac{{proportional\ explained\ variance}_i}{\frac{1}{{\#\ of\ dimensions}}}\]
+\[\kappa_i=\frac{{proportional\ explained\ variance}_i}{\frac{1}{p}}={proportional\ explained\ variance}_i\times p\]
+
+for $i=1,...,p$.
 
 One can define a decision rule, which is dempendent on a threshold $\delta$: \textit{Include $PC_i \ \forall \ \kappa_i>\delta$}
 
@@ -224,6 +226,48 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 
 
 \subsection{ANN Performance Comparison}
+First we compare the time and validation accuracy for 1 layer Neural Netwrok using 4 components and 8 components to get the taste of the advantage of using PCA.
+
+\begin{table}[!htbp] \centering 
+  \caption{4 Principal Components and 8 Principal Components Comparison} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{0pt}} ccccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & 4 Principal Components Analysis & 8 Principal Components Analysis \\ 
+\hline \\[-1.8ex] 
+Training Time \\  System Time & $62.622s$ & $78.302s$\\ 
+\hline \\
+Accuracy \\ On Validation Dataset & $0.775$ & $0.809$ \\ 
+Ratio of change in accuracy\\ to change in time & $ \texttt{\char`\~}$ & $0.002$ \\ 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+\begin{figure}[H]
+  \centering
+  \caption{1 Layer NN with 4 Principal Components}
+  \includegraphics[width=0.5\textwidth]%
+    {Graphics/4PC_Avg_CV_ANN_1_layers}% picture filename
+    \label{fig:4 PC}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \caption{1 Layer NN with 8 Principal Components}
+  \includegraphics[width=0.5\textwidth]%
+    {Graphics/4PC_Avg_CV_ANN_1_layers}% picture filename
+    \label{fig:8 PC}
+\end{figure}
+
+From the timing and accuracy table for 4PC and 8PC as well as two plots above, we can see that in one layer Neural Network, the training time using 4PC is much less than that using 8PC (or the whole information), which means that this data reduction helps decrease much computation intensity when training models. Besides, by comparing their classification accuracy on the validation dataset, using 4PC only sacrifice little on the performance of the model, the ratio of change in accuracy to change in time is only 0.002.\newline
+
+After balancing the gain and loss, we decide that training model with 4 PC is a better choice, because it's much less computational intense while maintain the most part of the information in the original data as well as high performance on the model. In fact, it is not necessary to persume such little accuracy at the price of so much time and compution intensity.\newline
+
+Next we train our model using 4PC with different number of layers and results are as following:
+
+
 
 \begin{table}[!htbp] \centering 
   \caption{Timing and Accurary} 
@@ -236,7 +280,7 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 Training Time \\  System Time & $55.267s$ & $77.497s$ & $90.501s$ & $110.841s$ & $122.357s$ \\ 
 \hline \\
 Accuracy \\ On Validation Dataset & $0.750$ & $0.735$ & $0.715$ & $0.720$ & $0.655$  \\ 
-Ratio of change in accuracy\\ to change in time & $\textbackslash$ & $-0.0006$ & $-0.015$ & $0.002$ & $-0.005$  \\ 
+Ratio of change in accuracy\\ to change in time & $ \texttt{\char`\~}$ & $-0.0006$ & $-0.015$ & $0.002$ & $-0.005$  \\ 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
 \end{tabular} 

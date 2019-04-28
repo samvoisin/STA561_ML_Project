@@ -220,12 +220,12 @@ create_results_df = function(cv_ann_out, layers){
   avg_master <- left_join(train_mean, test_mean) %>% 
     gather(key, vals, -epoch)
   
-  saveRDS(master_df,file = paste0("CV_ANN_",layers,"_layers.rds"))
-  saveRDS(avg_master, file = paste0("Avg_CV_ANN_",layers,"_layers.rds"))
+  saveRDS(master_df,file = paste0("4C_ANN_",layers,"_layers.rds"))
+  saveRDS(avg_master, file = paste0("4C_CV_AVG_ANN_",layers,"_layers.rds"))
 }
 
 
-max_layers = 5
+max_layers = 1
 for (m in 1:max_layers){
   system.time(tmp <- cvANN(x_dat = x_mat,
                 y_dat = y_mat,
@@ -251,7 +251,7 @@ for (m in 1:max_layers){
 
 ```{r}
 
-test = read_rds("Avg_CV_ANN_5_layers.rds")
+test = read_rds("4C_CV_AVG_ANN_1_layers.rds")
 ggplot(test, aes(x = epoch, y = vals, color = key ), alpha = 0.8) + 
   geom_point() + 
   geom_line(alpha = 0.8) +
@@ -262,10 +262,9 @@ ggplot(test, aes(x = epoch, y = vals, color = key ), alpha = 0.8) +
 
 
 plot_path = "../Tex/Graphics"
-ggsave(file.path(plot_path,"Avg_CV_ANN_5_layers"), dpi = 150, device = "png")
+ggsave(file.path(plot_path,"4PC_Avg_CV_ANN_1_layers.png"), dpi = 150, device = "png")
 
 ```
-
 
 
 

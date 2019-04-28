@@ -46,7 +46,9 @@ To create the computation graphs for the ANN we used the R implementation of Ker
 
 *Train/Test Sets and Performance:*
 
+\begin{com}
 To assess the performance of each ANN, we used an $80/20$ split our data to generate a gesture-specific training and a testing sets. These were done automatically in the Keras package via random sampling. We then assessed the classifcation accuracy of each ANN using a categorical cross entropy metric which measures the *Kullback-Leibler* (KL) divergence between the true distribution of the response variable and the distribution of the predictions.
+\end{com}
 
 ## Results
 
@@ -68,8 +70,13 @@ By reducing the number of inputs from $8$ smoothed signals to only $4$ principle
 **Predictive Accuracy Using $4$ Principle Components**
 
 
-![Figure 4: Accuracy ratio over epochs on training (blue) and validation (grean) data](/Graphics/[INSERT PIC])
+![Figure 4: Accuracy ratio over epochs on training (blue) and validation (green) data](/Graphics/[INSERT PIC])
 
+## Conclusion
+
+Through the analysis and modeling procedures described above, we have shown that it is possible to predict gestures using using artificial neural networks trained on sEMG signals data. Although increasing the number of dense hidden layers in the network did not result in greater predictive power, we were able to reduce the computational cost of fitting the ANN using a conceptually simple spectral decomposition for dimension reduction.
+
+This result is important because it not only serves to validate some of the results of the original research performed by Lobov *et al* but it also demonstrates that they could have achieved greater accuracy by slightly extending the depth of their multilayer perceptron. Furthermore, our work shows that the next generation of prosthetics can be equipped with sensors to record sEMG signals and pre-trained ANNs that are capable of responding to the user's nervous impulses in an intelligent, automated manner. Furthermore, we believe that the results presented here can be improved upon through further experimentation into recurrent neural network models and hardware specialized more specialized to this task.
 
 ## References & Citations
 
