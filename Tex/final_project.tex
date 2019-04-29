@@ -234,7 +234,7 @@ First we compare the time and validation accuracy for 1 layer Neural Netwrok usi
 
 \begin{table}[!htbp] \centering 
   \caption{4 Principal Components and 8 Principal Components Comparison} 
-  \label{} 
+  \label{tab:PCA48} 
 \begin{tabular}{@{\extracolsep{0pt}} ccccccccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
@@ -254,7 +254,7 @@ Ratio of change in accuracy\\ to change in time & $ \texttt{\char`\~}$ & $0.002$
   \caption{1 Layer NN with 4 Principal Components}
   \includegraphics[width=0.5\textwidth]%
     {Graphics/4PC_Avg_CV_ANN_1_layers}% picture filename
-    \label{fig:4 PC}
+    \label{fig:4PC}
 \end{figure}
 
 \begin{figure}[H]
@@ -262,10 +262,10 @@ Ratio of change in accuracy\\ to change in time & $ \texttt{\char`\~}$ & $0.002$
   \caption{1 Layer NN with 8 Principal Components}
   \includegraphics[width=0.5\textwidth]%
     {Graphics/4PC_Avg_CV_ANN_1_layers}% picture filename
-    \label{fig:8 PC}
+    \label{fig:8PC}
 \end{figure}
 
-From the timing and accuracy table for 4PC and 8PC as well as two plots above, we can see that in one layer Neural Network, the training time using 4PC is much less than that using 8PC (or the whole information), which means that this data reduction helps decrease much computation intensity when training models. Besides, by comparing their classification accuracy on the validation dataset, using 4PC only sacrifice little on the performance of the model, the ratio of change in accuracy to change in time is only 0.002.\newline
+From the timing and accuracy table for 4PC and 8PC (Table \ref{tab:PCA48}) as well as two plots above (Figure \ref{fig:4PC} and \ref{fig:8PC}), we can see that in one layer Neural Network, the training time using 4PC is much less than that using 8PC (or the whole information), which means that this data reduction helps decrease much computation intensity when training models. Besides, by comparing their classification accuracy on the validation dataset, using 4PC only sacrifice little on the performance of the model, the ratio of change in accuracy to change in time is only 0.002.\newline
 
 After balancing the gain and loss, we decide that training model with 4 PC is a better choice, because it's much less computational intense while maintain the most part of the information in the original data as well as high performance on the model. In fact, it is not necessary to presume such little more accuracy at the price of so much time and computation intensity.\newline
 
